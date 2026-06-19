@@ -1,0 +1,12 @@
+node_modules/
+config/profile.yml
+modes/_profile.md
+output/*
+!output/.gitkeep
+!output/README.md
+reports/*
+!reports/.gitkeep
+!reports/README.md
+data/*
+!data/.gitkeep
+!data/README.md
