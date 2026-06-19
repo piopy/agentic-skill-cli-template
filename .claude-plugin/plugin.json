@@ -1,0 +1,15 @@
+{
+  "name": "myframe",
+  "version": "0.1.0",
+  "description": "<una frase sul tuo framework agentico>",
+  "author": {
+    "name": "Il tuo nome",
+    "url": "https://example.com"
+  },
+  "skills": true,
+  "permissions": {
+    "allow": [
+      "Bash(node:*)"
+    ]
+  }
+}

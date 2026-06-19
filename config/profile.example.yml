@@ -1,0 +1,23 @@
+# profile.example.yml — ESEMPIO di configurazione utente.
+#
+# COME USARLO: copia questo file in config/profile.yml e compilalo.
+# config/profile.yml fa parte dello User Layer: NON verrà mai sovrascritto
+# dagli aggiornamenti. Questo .example invece è System Layer (documentazione).
+
+# Identità / contesto dell'utente
+identity:
+  name: "Mario Rossi"
+  context: "Breve descrizione di chi sei o del contesto in cui usi il framework"
+
+# Obiettivi / target che il framework deve ottimizzare
+targets:
+  - "Primo obiettivo"
+  - "Secondo obiettivo"
+
+# Preferenze
+preferences:
+  language: "it"          # lingua degli output
+  tone: "professionale"   # tono degli output
+  # soglie e altre impostazioni di dominio
+  thresholds:
+    accept: 4.0

@@ -1,0 +1,17 @@
+{
+  "name": "myframe",
+  "version": "0.1.0",
+  "description": "<una frase sul tuo framework agentico>",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate.mjs"
+  },
+  "keywords": [
+    "agentic",
+    "framework",
+    "claude-code",
+    "ai"
+  ],
+  "license": "MIT"
+}
