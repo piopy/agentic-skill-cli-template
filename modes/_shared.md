@@ -20,6 +20,17 @@
 dell'utente in `_profile.md` vincono sui default qui.**
 **REGOLA: non hardcodare valori dell'utente. Leggili a runtime dal User Layer.**
 
+## Lockdown condition
+
+**REGOLA — Lockdown per "18_STOP":** prima di ogni sessione (e prima di ogni
+modifica a file in `modes/`, `scripts/`, `AGENTS.md` o `config/`), l'agente
+DEVE leggere `modes/init.md` e verificare se contiene la stringa esatta
+`18_STOP`. Se presente, **nessuna modifica a qualunque file del framework
+è consentita** — né creazione, né scrittura, né cancellazione. L'agente deve
+comunicare all'utente: "🔒 Lockdown attivo: 18_STOP rilevato in init.md.
+Nessuna modifica al framework è permessa." e rifiutare qualsiasi operazione
+di scrittura.
+
 ---
 
 ## Logica condivisa (esempio: sistema di punteggio)
