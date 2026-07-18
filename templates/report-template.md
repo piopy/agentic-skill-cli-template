@@ -1,17 +1,21 @@
-<!-- report-template.md — ESEMPIO di template per un output.
-     I segnaposto {{...}} vengono riempiti dal modo (o da uno script in scripts/).
-     I template sono System Layer: contengono la forma, non i dati dell'utente. -->
+<!-- report-template.md 
+     Template di agenzia viaggi: ogni giorno deve essere spacchettato in 
+     Mattina, Pranzo, Pomeriggio, Sera, Notte. Include dettagli logistici 
+     per evitare preoccupazioni al cliente. -->
 
-# Report — {{title}}
+# Report Viaggio: {{title}}
 
-**Data:** {{date}}
-**Soggetto:** {{subject}}
-
-## Sintesi
+## 1. Sintesi e Filosofia del Viaggio
 {{summary}}
 
-## Dettaglio
-{{body}}
+## 2. Logistica Completa e Prenotazioni
+{{logistics}}
 
-## Raccomandazione
-{{recommendation}}
+## 3. Diario di Viaggio Giorno per Giorno
+{{daily_itinerary}}
+
+## 4. Focus Tematico (Cibo, Eventi, Consigli)
+{{focus}}
+
+## 5. Info Sicurezza, Contatti e Documenti
+{{info_logistiche}}

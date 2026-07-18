@@ -4,6 +4,7 @@ node_modules/
 output/*
 !output/.gitkeep
 !output/README.md
+!output/template-*.md
 reports/*
 !reports/.gitkeep
 !reports/README.md
