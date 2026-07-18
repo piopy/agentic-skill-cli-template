@@ -56,17 +56,17 @@ generazione file), proponi anche un piccolo script in `scripts/` e spiega
 all'utente perché quel pezzo va in codice e non in prosa.
 
 ### Passo 6 — Collegare il router
-Aggiorna `skills/myframe/SKILL.md`: aggiungi il nuovo comando alla tabella di
+Aggiorna `skills/travel-planner/SKILL.md`: aggiungi il nuovo comando alla tabella di
 routing e al menu di discovery, e indica quali file caricare per quel modo.
 
 ### Passo 7 — Prova a secco
-Simula l'invocazione `/myframe <verbo> <input d'esempio>` e mostra all'utente
+Simula l'invocazione `/travel-planner <verbo> <input d'esempio>` e mostra all'utente
 cosa accadrebbe passo per passo. Raccogli feedback e itera sul modo pilota
 finché non è soddisfatto.
 
 ### Passo 8 — Prossimi passi
 Riepiloga cosa è stato creato e quali verbi restano da implementare. Suggerisci
-di tornare con `/myframe init` per aggiungere il prossimo modo.
+di tornare con `/travel-planner init` per aggiungere il prossimo modo.
 
 ## Nota per l'agente
 Sei tu a scrivere i file (l'utente te lo consente). Usa il tool di domande

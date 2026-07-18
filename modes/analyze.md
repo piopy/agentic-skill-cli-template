@@ -1,27 +1,48 @@
-# Mode: analyze — <cosa analizza>
+# Mode: analyze — Analisi e confronto opzioni
 
-<!-- Modo di ESEMPIO. Mostra la struttura tipica di un modo "di valutazione".
-     Sostituisci i blocchi con la logica del tuo dominio. -->
+Modo per analizzare e confrontare link che l'utente incolla (alloggi, attività,
+ristoranti) e aiutarlo a decidere.
 
-Quando l'utente fornisce un input (testo o file), produci un'analisi strutturata
-seguendo questi blocchi. Usa la scala e i formati definiti in `modes/_shared.md`
-e applica gli override presenti in `modes/_profile.md`.
+## Obiettivo
 
-## Step 0 — Validazione input
-Se l'input è un file/URL, verifica che sia valido e leggibile prima di procedere.
-Se non lo è, fermati e spiega all'utente cosa manca. (Eventualmente usa
-`node scripts/validate.mjs`.)
+Dati 2+ link a opzioni (es. due annunci Booking, due ristoranti), produrre un
+confronto strutturato che aiuti l'utente a scegliere.
 
-## Blocco A — Sintesi
-Riassumi l'input in una tabella: cosa è, contesto, TL;DR in una frase.
+## Flusso
 
-## Blocco B — Valutazione sui criteri
-Per ogni criterio definito in `_shared.md`, assegna un punteggio e motivalo
-citando parti specifiche dell'input.
+### Step 1 — Raccolta input
 
-## Blocco C — Raccomandazione
-Verdetto finale basato sul punteggio globale, con il razionale.
+L'utente incolla i link (Booking, Airbnb, Google Maps, ristoranti, eventi, ecc.)
+specificando cosa sta confrontando:
+- "Questi due B&B a Vienna, quale mi consigli?"
+- "Questi tre ristoranti a Copenaghen"
+
+### Step 2 — Analisi
+
+Per ogni link, cerca di estrarre:
+- **Posizione**: quartiere, vicinanza a metro/centro (max 20 min a piedi da metro)
+- **Prezzo**: costo totale/notte/persona
+- **Rating**: voto utenti
+- **Servizi**: bagno privato, cancellaz. gratuita, WiFi, colazione
+- **Vicinanza a POI**: confronto con attrazioni principali
+
+### Step 3 — Tabella comparativa
+
+| Criterio | Opzione A | Opzione B | Opzione C |
+|----------|-----------|-----------|-----------|
+| Prezzo | €120 | €100 | €140 |
+| Posizione | Centro, 5 min metro | Periferia, 15 min bus | Centro, 2 min metro |
+| Rating | 4.5 | 4.2 | 4.7 |
+| Bagno privato | ✅ | ❌ | ✅ |
+| Cancellaz. grat. | ✅ | ✅ | ❌ |
+| **Verdetto** | ✅ Buon compromesso | ❌ | ⭐ Migliore qualità |
+
+### Step 4 — Raccomandazione
+
+Spiega quale opzione è migliore e perché, in base alle preferenze del profilo.
 
 ## Output
-Salva il risultato in `reports/` con naming coerente (vedi `_shared.md`) e
-mostra all'utente un riassunto. Se previsto, aggiorna lo stato in `data/state.md`.
+
+Tabella comparativa + raccomandazione motivata. Non salva nulla permanentemente
+a meno che l'utente non chieda espressamente di aggiungere la scelta a una
+pianificazione in corso.

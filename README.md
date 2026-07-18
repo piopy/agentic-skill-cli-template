@@ -2,7 +2,7 @@
 
 Un template generico e didattico per costruire il **tuo** framework agentico sopra un AI coding CLI (Claude Code, OpenCode, Gemini, Codex, Qwen...).
 
-> Sostituisci ovunque `myframe` con il nome del tuo framework.
+> Framework per il AI Travel Planner.
 
 ---
 
@@ -24,7 +24,7 @@ Tre principi guida:
 
 | Mattone | Dove vive | A cosa serve |
 |---------|-----------|--------------|
-| **Router / Skill** | `skills/myframe/SKILL.md` | Punto d'ingresso. L'utente scrive `/myframe <comando>` e il router decide quale "modo" eseguire. |
+| **Router / Skill** | `skills/travel-planner/SKILL.md` | Punto d'ingresso. L'utente scrive `/travel-planner <comando>` e il router decide quale "modo" eseguire. |
 | **Modi (Modes)** | `modes/*.md` | Un file per ogni capacità (un "verbo" del tuo dominio). Contiene le istruzioni in linguaggio naturale che l'agente segue. |
 | **Istruzioni agente** | `AGENTS.md` (+ wrapper `CLAUDE.md`) | Regole globali sempre valide, indipendenti dal modo. |
 | **Tool deterministici** | `scripts/*.mjs` | Codice eseguibile per ciò che non va lasciato all'LLM (I/O file, validazione, parsing). |
@@ -35,7 +35,7 @@ Tre principi guida:
 ## 3. Come l'agente "esegue" il framework (il ciclo)
 
 ```
-Utente:  /myframe analyze <input>
+Utente:  /travel-planner analyze <input>
             │
             ▼
 SKILL.md (router) ── individua il modo "analyze"
@@ -75,7 +75,7 @@ Dettagli completi in `DATA_CONTRACT.md`.
 4. **Scrivi `modes/_profile.template.md`.** Lo scheletro che l'utente copierà in `_profile.md` per personalizzare senza toccare il sistema.
 5. **Scrivi un file per modo.** Comincia con UNO solo (il più importante), fallo funzionare end-to-end, poi aggiungi gli altri.
 6. **Scrivi gli script deterministici** in `scripts/` solo quando un compito è troppo delicato per lasciarlo all'LLM (parsing, validazione, dedup, generazione PDF...).
-7. **Collega tutto nel router** `skills/myframe/SKILL.md` e nelle istruzioni globali `AGENTS.md`.
+7. **Collega tutto nel router** `skills/travel-planner/SKILL.md` e nelle istruzioni globali `AGENTS.md`.
 
 > Inizia minuscolo: 1 modo + 1 file di config + il router. Espandi solo quando il primo flusso gira pulito.
 
@@ -87,7 +87,7 @@ Ogni cartella ha il suo `README.md` con spiegazioni dettagliate. Panoramica:
 
 | Percorso | Contenuto | Layer |
 |----------|-----------|-------|
-| `skills/myframe/SKILL.md` | Router: smista i comandi verso i modi | System |
+| `skills/travel-planner/SKILL.md` | Router: smista i comandi verso i modi | System |
 | `modes/` | Un `.md` per capacità + `_shared.md` + `_profile.md` | System (`_profile.md` è User) |
 | `config/` | `profile.yml` e configurazioni utente | User |
 | `scripts/` | Tool deterministici `.mjs` | System |
@@ -114,7 +114,7 @@ Ogni cartella ha il suo `README.md` con spiegazioni dettagliate. Panoramica:
 ## 8. Prossimi passi
 
 1. Leggi i README di ogni cartella (sono pensati come una lezione).
-2. Rinomina `myframe` con il nome del tuo framework.
+2. Il framework si chiama `travel-planner`.
 3. Compila `config/profile.example.yml` e crea il tuo `modes/_shared.md`.
 4. Implementa il primo modo end-to-end.
 5. Testa il giro completo dal router.

@@ -1,7 +1,6 @@
 {
-  "name": "myframe",
-  "metadata": {
-    "description": "<una frase sul tuo framework agentico>"
+  "name": "travel-planner",
+    "description": "AI Travel Planner — pianificatore di vacanze in stile AI"
   },
   "owner": {
     "name": "Il tuo nome",
@@ -9,9 +8,9 @@
   },
   "plugins": [
     {
-      "name": "myframe",
+"name": "travel-planner",
       "source": "./",
-      "description": "<descrizione del plugin>",
+      "description": "AI Travel Planner — pianificatore di vacanze in stile AI",
       "category": "productivity"
     }
   ]

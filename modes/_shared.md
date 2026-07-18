@@ -1,11 +1,11 @@
-# System Context — myframe
+# System Context — travel-planner
 
 <!-- ============================================================
      QUESTO FILE È AGGIORNABILE. Non metterci dati personali.
 
      Le personalizzazioni vanno in modes/_profile.md (mai aggiornato).
      Qui stanno regole di sistema, logica di punteggio e config dei tool
-     che migliorano a ogni release di myframe.
+     che migliorano a ogni release di travel-planner.
      ============================================================ -->
 
 ## Sources of Truth
@@ -49,8 +49,18 @@ intestazione di una tabella, naming dei file in `output/`).
 
 ## Tool disponibili
 
-Elenca gli script in `scripts/` che i modi possono invocare e cosa fanno:
+Tutti gli script Python vanno eseguiti con `uv run --directory scripts/py/` dalla root del progetto.
+Prima di usare `search_browser.py`, avvia Chrome: `uv run --directory scripts/py chrome_driver.py start`
 
 | Comando | Script | Cosa fa |
 |---------|--------|---------|
 | `node scripts/validate.mjs` | `scripts/validate.mjs` | Valida i dati di input |
+| `uv run --directory scripts/py search_browser.py flights ...` | `scripts/py/search_browser.py` | Cerca voli reali via Selenium + Chrome |
+| `uv run --directory scripts/py search_browser.py hotels ...` | `scripts/py/search_browser.py` | Cerca hotel reali via Selenium + Chrome |
+| `uv run --directory scripts/py search_multi.py ...` | `scripts/py/search_multi.py` | Confronto rotte diretta/inversa + skiplagging |
+| `uv run --directory scripts/py search_poi.py ...` | `scripts/py/search_poi.py` | POI, attrazioni, cibo via Wikipedia API |
+| `uv run --directory scripts/py search_weather.py ...` | `scripts/py/search_weather.py` | Previsioni meteo via Open-Meteo |
+| `uv run --directory scripts/py geocode.py ...` | `scripts/py/geocode.py` | Geocoding via OpenStreetMap |
+| `uv run --directory scripts/py route_distance.py ...` | `scripts/py/route_distance.py` | Distanze e tempi tra POI via OSRM |
+| `uv run --directory scripts/py generate_links.py ...` | `scripts/py/generate_links.py` | Genera link di ricerca (fallback) |
+| `uv run --directory scripts/py chrome_driver.py start\|stop` | `scripts/py/chrome_driver.py` | Gestisce Chrome in Docker per Selenium |

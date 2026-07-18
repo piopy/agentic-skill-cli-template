@@ -1,5 +1,5 @@
 node_modules/
-config/profile.yml
+# config/profile.yml
 modes/_profile.md
 output/*
 !output/.gitkeep
@@ -8,5 +8,8 @@ reports/*
 !reports/.gitkeep
 !reports/README.md
 data/*
+!data/guide.md
 !data/.gitkeep
 !data/README.md
+__pycache__
+.venv

@@ -1,4 +1,4 @@
-# myframe — <una frase che descrive cosa fa il framework>
+# travel-planner — AI Travel Planner
 
 <!-- Questo file contiene le istruzioni GLOBALI per l'agente AI, valide
      in ogni modo. È il file canonico: CLAUDE.md e gli altri wrapper di CLI
@@ -44,7 +44,7 @@ All'inizio di ogni sessione, prima di eseguire un modo, carica nell'ordine:
 - Non hardcodare valori dell'utente nelle regole; leggili a runtime dal User Layer.
 - <aggiungi qui le regole etiche / di sicurezza specifiche del tuo dominio>
 
-## Cosa è myframe
+## Cosa è travel-planner
 
 <Descrizione di 2-3 righe: input, output, capacità principali.>
 

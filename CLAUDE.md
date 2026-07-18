@@ -1,4 +1,4 @@
-# myframe — istruzioni per Claude Code
+# travel-planner — istruzioni per Claude Code
 
 <!-- Wrapper specifico per Claude Code. Il file canonico è AGENTS.md.
      Tieni qui solo ciò che è specifico di Claude Code; per il resto,
@@ -9,7 +9,7 @@
 
 ## Specifico di Claude Code
 
-- Il framework si invoca come skill: `/myframe <comando>` (vedi `skills/myframe/SKILL.md`).
+- Il framework si invoca come skill: `/travel-planner <comando>` (vedi `skills/travel-planner/SKILL.md`).
 - Per modi pesanti (molte chiamate a tool, lavoro parallelo), valuta di delegare
   a un subagent tramite il tool Agent, iniettando nel prompt il contenuto di
   `modes/_shared.md` + `modes/<modo>.md`.

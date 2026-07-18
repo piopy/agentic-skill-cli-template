@@ -1,0 +1,11 @@
+[project]
+name = "travel-planner-tools"
+version = "0.1.0"
+description = "Tool deterministici Python per AI Travel Planner"
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31",
+    "selenium>=4.15",
+]
+
+[tool.uv]

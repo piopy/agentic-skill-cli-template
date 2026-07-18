@@ -1,0 +1,274 @@
+# Mode: plan — Pianificazione vacanza stile AI
+
+Esegue il **flusso completo di pianificazione** intervistando l'utente passo
+passo e producendo una guida markdown dettagliata.
+
+## Obiettivo
+
+Alla fine della sessione, l'utente deve avere un file in `output/`
+con la guida di viaggio completa: giorno per giorno, mattina/pomeriggio/sera,
+con link di Maps per ogni cosa.
+
+## Flusso
+
+### Step 0 — Carica contesto
+
+Leggi `config/profile.yml` e `modes/_profile.md` per conoscere le preferenze.
+
+### Step 1 — Raccolta requisiti (intervista, una domanda alla volta)
+
+1. **Destinazione**: Dove si va? Una città, più città, una regione?
+2. **Date**: Giorni precisi o periodo flessibile?
+3. **Persone**: Quanti siete? (l'utente decide per tutti)
+4. **Budget indicativo**: Alto, medio, basso — o范围 specifico?
+5. **Mezzo preferito**: Macchina disponibile? O solo mezzi pubblici?
+6. **Stile**: Relax, culturale, natura, misto?
+
+### Step 2 — Trasporti (via script deterministici)
+
+Prima di tutto, assicurati che Chrome Docker sia attivo (se non lo è):
+```
+uv run --directory scripts/py chrome_driver.py start
+```
+
+**REGOLA — Confronto rotte**: se ci sono più città, confronta SEMPRE la rotta
+diretta (arrivo CittàA → partenza CittàB) con la rotta inversa (arrivo CittàB →
+partenza CittàA). Usa `search_multi.py`:
+
+```
+uv run --directory scripts/py search_multi.py --from <ORIGINE> --cities <CITTA1,CITTA2> --date YYYY-MM-DD --returndate YYYY-MM-DD
+```
+
+Esempio: `uv run --directory scripts/py search_multi.py --from BLQ --cities BCN,VLC --date 2026-10-02 --returndate 2026-10-05`
+
+Questo confronta automaticamente:
+- **Diretta**: BLQ→BCN + VLC→BLQ
+- **Inversa**: BLQ→VLC + BCN→BLQ
+
+**REGOLA — Skiplagging (Hidden City Ticketing)**: verifica sempre se un volo
+A→C con scalo a B costa meno del diretto A→B. Se sì, segnalalo all'utente come
+"skiplagging candidato". Il fenomeno si chiama **skiplagging** o **hidden city ticketing**
+e capita quando prenotare un volo con scalo è più economico del diretto
+(es. BLQ→VLC via BCN costa meno di BLQ→BCN diretto — si prende il volo e
+si scende a BCN senza imbarcare l'ultima tratta).
+
+Lo script `search_multi.py` elenca già i candidati skiplagging. Per verificare
+ciascuno, cerca il volo diretto A→C e controlla se passa per B:
+
+```
+uv run --directory scripts/py search_browser.py flights --from <A> --to <C> --date YYYY-MM-DD
+```
+
+**REGOLA — Scali**: non cercare solo voli diretti. Se il diretto è caro, cerca
+anche voli con scalo (es. BLQ→BCN con scalo a Roma). Google Flights li mostra
+automaticamente nei risultati.
+
+**REGOLA — Aeroporti alternativi**: per OGNI città, verifica SEMPRE gli
+aeroporti alternativi nelle vicinanze (entro ~150km / 2h via bus/treno).
+Esempi:
+- Barcellona → GRO (Girona), REU (Reus)
+- Roma → CIA (Ciampino)
+- Milano → LIN (Linate), BGY (Bergamo)
+- Bologna → VRN (Verona), PSA (Pisa)
+- Firenze → BLQ (Bologna), PSA (Pisa)
+
+Cerca voli per TUTTI gli aeroporti alternativi e confronta prezzi:
+```
+uv run --directory scripts/py search_browser.py flights --from {ORIGINE} --to {ALTERNATIVO} --date YYYY-MM-DD
+```
+
+**REGOLA — Ritorno da città vicine**: non fermarti all'aeroporto di partenza
+previsto. Verifica se volare dal ritorno da un aeroporto vicino (es. GRO→BLQ,
+REU→BLQ invece di BCN→BLQ) è più economico, anche se serve un bus/treno
+per arrivarci. Includi il costo dello spostamento nel confronto.
+
+**REGOLA — Swap mete per città singola**: anche per una singola città,
+confronta:
+- Arrivare all'aeroporto principale vs alternativo
+- Partire dall'aeroporto principale vs alternativo
+- Combinazioni miste (arrivo BCN, partenza GRO)
+
+Se ci sono differenze di prezzo significative (>€20/pers), segnale all'utente.
+
+**REGOLA — Trasporto locale**: per ogni città, consiglia il mezzo più
+economico e veloce per spostarsi.
+- **Metro**: sempre preferibile per città grandi
+- **A piedi**: per distanze <2km (<25 min) — indica i minuti
+- **Bus/tram/treno**: alternativa se il metro non arriva
+- **Taxi/Uber**: solo per necessità
+- **Aeroporto→centro**: costo e durata di ogni opzione
+
+Per distanze tra POI usa `route_distance.py --profile foot`.
+Per Barcellona: T-casual 10 corse ~€11,35 (condivisibile). Aeroporto:
+Aerobús €6,75 35min o metro L9 €5,15 25min.
+
+**REGOLA — Skyscanner è il default per i voli**: genera SEMPRE link Skyscanner
+come primo risultato per ogni ricerca voli. Se lo scraping via Selenium non
+dà risultati o l'utente dice "non vedo tutti i voli", fornisci il link
+Skyscanner diretto come alternativa principale.
+
+**REGOLA — Cross-reference quando Selenium non dà risultati**: Google Flights
+a volte non carica o dà "No results returned" per problemi di scraping.
+In quel caso:
+1. **Rilanciare** il comando `search_browser.py` una seconda volta (a volte funziona)
+2. **Fornire subito il link Skyscanner**: l'utente lo apre e vede tutti i voli
+3. **Websearch**: cerca su Google "voli {ORIGINE} {DESTINAZIONE} {DATA}" per vedere orari
+4. **Chiedere all'utente**: "I dati via browser non sono stati caricati completamente. Ecco il link Skyscanner, vedi tutti i voli lì."
+5. **Usare fonti alternative**: Ryanair.com, Skyscanner.it, eoob.it per la schedule
+6. Se l'utente conferma un'opzione, salvala comunque
+
+**REGOLA — Skiplagging (Hidden City Ticketing)**: verifica sempre se un volo
+A→C con scalo a B costa meno del diretto A→B. Se sì, segnalalo all'utente.
+```
+uv run --directory scripts/py generate_links.py --type trains --from "<CITTA>" --to "<CITTA>" --date YYYY-MM-DD
+```
+
+**Verifica meteo** per le date del viaggio:
+```
+uv run --directory scripts/py search_weather.py --city "<CITTA>" --days <N>
+```
+
+Per ogni opzione: mostra i risultati JSON e i link. L'utente sceglie e conferma.
+Salva orari, costi, link.
+
+### Step 3 — Alloggio (via script deterministici)
+
+**REGOLA — Valuta TUTTI i risultati**: lo script `search_browser.py hotels`
+restituisce TUTTE le opzioni disponibili nella pagina. Non scartare nessun
+risultato a priori. Per ognuno, estrai e mostra:
+
+1. Per ogni città/tappa: cerca hotel reali:
+   ```
+   uv run --directory scripts/py search_browser.py hotels --city "<CITTA>" --checkin YYYY-MM-DD --checkout YYYY-MM-DD --adults <N>
+   ```
+
+2. Estrai dall'output JSON completo TUTTI gli hotel con prezzo, nome e rating.
+   Se un hotel appare sia nella sezione "sponsored" che in "view prices",
+   mostra il prezzo più basso.
+
+3. Per le distanze tra quartieri e punti d'interesse:
+   ```
+   uv run --directory scripts/py route_distance.py --from "LAT,LON" --to "LAT,LON" --profile foot
+   ```
+
+4. L'utente esplora, sceglie candidati e **incolla i link**.
+5. Aiuta a decidere: confronta posizione, prezzo, recensioni (usa geocode.py).
+6. Alla conferma: salva nome, indirizzo, link, date, costo.
+
+### Step 4 — Attività e itinerari (via script deterministici)
+
+1. **Ricerca POI e attrazioni** via Wikipedia API:
+   ```
+   uv run --directory scripts/py search_poi.py --city "<CITTA>" --type attractions --lang it
+   ```
+
+2. **Eventi**: usa websearch/webfetch per eventi/mostre/concerti.
+
+3. **Cibo tipico locale**:
+   ```
+   uv run --directory scripts/py search_poi.py --city "<CITTA>" --type food --lang it
+   ```
+
+4. **Itinerario giornaliero**: costruisci percorso logico raggruppando POI vicini.
+   - Usa `route_distance.py` per calcolare distanze a piedi tra POI
+   - Usa `geocode.py` per trovare coordinate di un POI
+   - Mattina: primo giro
+   - Pomeriggio: proseguimento
+   - Sera: cena + zona serale
+   - Ogni tappa deve essere ragionevolmente raggiungibile dalla precedente
+   - **L'ultima tappa della giornata deve essere l'alloggio**
+
+5. Per ogni POI: fornisci link Google Maps.
+6. L'utente approva o chiede modifiche.
+
+### Step 5 — Cibo
+
+1. Ricerca la cucina tipica locale.
+2. Su Google Maps: trova locali con recensioni migliori per quei piatti.
+3. Proponi 2-3 opzioni per pasto principale con link Maps.
+4. Considera costo e posizione (vicino all'itinerario del giorno).
+5. L'utente sceglie.
+
+### Step 6 — Generazione report markdown
+
+Esegui lo script per generare il report:
+```
+node scripts/generate-report.mjs
+```
+passando i dati raccolti. Il report viene salvato in `output/<vacanza>.md`.
+
+Struttura del report:
+```markdown
+# 🏖️ <Nome vacanza> — <date>
+
+## Info viaggio
+- **Destinazione**: ...
+- **Date**: ...
+- **Persone**: ...
+- **Budget**: ...
+
+## 🚗 Trasporti
+### Andata
+- [Tipo] [Compagnia] — [link prenotazione]
+- Orario: ... → ...
+- Costo: ...
+
+### Ritorno
+- ...
+
+### Spostamenti interni
+- ...
+
+## 🏨 Alloggi
+### [Città] — [Date]
+- [Nome] — [link Booking/Airbnb]
+- Indirizzo: ...
+- Costo totale: ...
+
+## 📅 Itinerario
+
+### Giorno 1 — [Data]
+#### ☀️ Mattina
+- [Attrazione] — [link Maps]
+- [Attrazione] — [link Maps]
+
+#### 🌤️ Pomeriggio
+- ...
+
+#### 🌙 Sera
+- 🍽️ Cena da [Ristorante] — [link Maps]
+- 🏠 Rientro all'alloggio ([link Maps])
+- ...
+
+### Giorno 2
+...
+
+## 🎟️ Eventi e biglietti
+- [Evento] — [data] — [link biglietti]
+
+## 💰 Budget riepilogativo
+| Voce | Costo |
+|------|-------|
+| Trasporti | ... |
+| Alloggi | ... |
+| Cibo (stima) | ... |
+| Attività/eventi | ... |
+| **Totale** | **...** |
+
+## 📌 Link utili
+- [Skyscanner]
+- [Booking]
+- [Mappe personalizzate]
+```
+
+## Step 7 — Revisione
+
+Mostra il report all'utente. Chiedi modifiche o conferma finale. Se modifiche,
+itera sugli step interessati e rigenera.
+
+## Step 8 — Cleanup
+
+Se Chrome Docker è stato avviato, fermalo:
+```
+uv run --directory scripts/py chrome_driver.py stop
+```

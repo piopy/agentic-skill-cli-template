@@ -1,4 +1,4 @@
-# User Profile Context — myframe
+# User Profile Context — travel-planner
 
 <!-- ============================================================
      QUESTO FILE È TUO. Non verrà MAI aggiornato in automatico.

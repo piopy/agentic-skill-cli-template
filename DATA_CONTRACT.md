@@ -28,7 +28,7 @@ Contiene logica, script, template e istruzioni che migliorano a ogni release.
 | `modes/_shared.md` | Regole comuni, scale di punteggio, formati |
 | `modes/_profile.template.md` | Scheletro che l'utente copia in `_profile.md` |
 | `modes/<modo>.md` | Istruzioni dei singoli modi |
-| `skills/myframe/SKILL.md` | Router |
+| `skills/travel-planner/SKILL.md` | Router |
 | `AGENTS.md`, `CLAUDE.md` | Istruzioni per l'agente |
 | `scripts/*` | Tool deterministici |
 | `templates/*` | Modelli per gli output |

@@ -1,7 +1,7 @@
 {
-  "name": "myframe",
+  "name": "travel-planner",
   "version": "0.1.0",
-  "description": "<una frase sul tuo framework agentico>",
+  "description": "AI Travel Planner — pianificatore di vacanze in stile AI",
   "author": {
     "name": "Il tuo nome",
     "url": "https://example.com"

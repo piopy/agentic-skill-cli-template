@@ -35,5 +35,5 @@ Le personalizzazioni dell'utente vincono sui default.
 ## Come aggiungere un modo
 1. Crea `modes/<verbo>.md`.
 2. Se introduce regole condivise, aggiorna `_shared.md` (mai con dati utente).
-3. Registralo nel router `skills/myframe/SKILL.md`.
+3. Registralo nel router `skills/travel-planner/SKILL.md`.
 4. Classificalo nel `DATA_CONTRACT.md` (di norma System Layer).

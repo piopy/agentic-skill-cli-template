@@ -2,10 +2,10 @@
 
 ## Cosa va qui
 Una sottocartella per ogni skill invocabile dall'utente. Nel template c'è
-`myframe/` con dentro `SKILL.md`, il **router**.
+`travel-planner/` con dentro `SKILL.md`, il **router**.
 
 ## Cos'è il router (`SKILL.md`)
-È il file che il CLI esegue quando l'utente scrive `/myframe <comando>`.
+È il file che il CLI esegue quando l'utente scrive `/travel-planner <comando>`.
 L'intestazione YAML (`name`, `description`, `argument-hint`, `user_invocable`)
 dice al CLI come esporre la skill. Il corpo fa tre cose:
 
