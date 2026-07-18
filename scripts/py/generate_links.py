@@ -17,7 +17,7 @@ import urllib.parse
 
 def build_skyscanner(origin: str, dest: str, date: str, adults: int = 2) -> str:
     date_compact = date.replace("-", "")
-    return (f"https://www.skyscanner.it/trasporto/voli/{origin.lower()}/{dest.lower()}/"
+    return (f"https://www.skyscanner.it/trasporti/voli/{origin.lower()}/{dest.lower()}/"
             f"{date_compact}/?adultsv2={adults}")
 
 
