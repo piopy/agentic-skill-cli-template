@@ -1,6 +1,6 @@
 node_modules/
 # config/profile.yml
-modes/_profile.md
+!modes/_profile.md
 output/*
 !output/.gitkeep
 !output/README.md
