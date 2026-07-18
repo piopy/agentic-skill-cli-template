@@ -17,12 +17,16 @@ Leggi `config/profile.yml` e `modes/_profile.md` per conoscere le preferenze.
 
 ### Step 1 — Raccolta requisiti (intervista, una domanda alla volta)
 
-1. **Destinazione**: Dove si va? Una città, più città, una regione?
-2. **Date**: Giorni precisi o periodo flessibile?
-3. **Persone**: Quanti siete? (l'utente decide per tutti)
-4. **Budget indicativo**: Alto, medio, basso — o范围 specifico?
-5. **Mezzo preferito**: Macchina disponibile? O solo mezzi pubblici?
-6. **Stile**: Relax, culturale, natura, misto?
+**REGOLA — Fai TUTTE le domande prima di proporre mete.**
+Non proporre destinazioni finché non hai raccolto TUTTI i requisiti qui sotto.
+
+1. **Città di partenza**: Da dove si parte? (es. città, aeroporto più vicino)
+2. **Destinazione**: Dove si va? Una città, più città, una regione? (se non hai idee, chiedi stile prima e proponi dopo aver raccolto tutto)
+3. **Date**: Giorni precisi o periodo flessibile? Quante notti/giorni?
+4. **Persone**: Quanti siete? (l'utente decide per tutti)
+5. **Budget indicativo**: Alto, medio, basso — o range specifico?
+6. **Mezzo preferito**: Macchina disponibile? O solo mezzi pubblici?
+7. **Stile**: Relax, culturale, natura, misto, cibo?
 
 ### Step 2 — Trasporti (via script deterministici)
 
