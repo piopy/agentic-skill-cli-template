@@ -22,17 +22,17 @@ from pathlib import Path
 SCRIPTS_DIR = Path(__file__).parent
 
 
-def run(script: str, *args: str) -> dict:
+def run(script: str, *args: str, timeout: int = 60) -> dict:
     cmd = ["uv", "run", str(SCRIPTS_DIR / script)] + list(args)
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
         if result.returncode != 0:
             return {"error": result.stderr.strip(), "command": " ".join(cmd)}
         return json.loads(result.stdout)
     except json.JSONDecodeError as e:
         return {"error": f"JSON parse error: {e}", "raw": result.stdout}
     except subprocess.TimeoutExpired:
-        return {"error": "Timeout (30s)"}
+        return {"error": f"Timeout ({timeout}s)"}
     except Exception as e:
         return {"error": str(e)}
 
@@ -42,6 +42,8 @@ COMMANDS = {
     "weather": ("search_weather.py", ["--city", "--lat", "--lon", "--days"]),
     "geocode": ("geocode.py", ["--q", "--lat", "--lon", "--limit"]),
     "distance": ("route_distance.py", ["--from", "--to", "--profile"]),
+    "hotels": ("search_hotels.py", ["--city", "--checkin", "--checkout", "--adults", "--max", "--no-browser", "--cluster-dist", "--match-threshold"]),
+    "flights": ("search_flights.py", ["--from", "--to", "--date", "--adults", "--max", "--no-browser"]),
     "links": ("generate_links.py", ["--type", "--from", "--to", "--date",
                                      "--return-date", "--city", "--checkin",
                                      "--checkout", "--adults", "--max-price", "--query"]),

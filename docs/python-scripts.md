@@ -261,10 +261,86 @@ uv run --directory scripts/py generate_links.py \
 
 ---
 
+## search_hotels.py — Ricerca ibrida hotel (Overpass OSM + prezzo browser)
+
+Due layer: **OpenStreetMap (Overpass)** per l'esistenza reale degli hotel
+(nome, coordinate, stelle, sito), incrociato con **Booking.com (Selenium)**
+per il range di prezzo reale. Dedup per coordinate (<60m) e match fuzzy dei nomi.
+
+**Disponibilità garantita**: lo scraping delle card Booking conserva l'URL
+completo con `matching_block_id`/`sr_pri_blocks` — il blocco tariffa che Booking
+genera SOLO per le date/adulti richiesti. Le card senza prezzo o senza blocco
+tariffa (sold-out per quelle date) vengono escluse automaticamente. Le card
+mostrano prezzi simbolici "€1" per strutture non disponibili → escluse
+(filtro <€10).
+
+```bash
+# Layer completo (OSM + prezzi)
+uv run --directory scripts/py search_hotels.py \
+  --city "Budapest" --checkin 2026-10-02 --checkout 2026-10-04 --adults 2
+
+# Solo layer OSM (nessun browser)
+uv run --directory scripts/py search_hotels.py --city "Budapest" --no-browser
+```
+
+| Argomento | Obbligatorio | Descrizione |
+|-----------|-------------|-------------|
+| `--city` | sì | Città da geocodificare |
+| `--checkin` / `--checkout` | sì* | Date (serve per i prezzi) |
+| `--adults` | no (default 2) | Numero adulti |
+| `--max` | no (default 25) | Max hotel in output |
+| `--no-browser` | no | Salta scraping prezzi |
+| `--cluster-dist` | no (default 60) | Distanza dedup in metri |
+| `--match-threshold` | no (default 0.5) | Soglia match fuzzy nomi |
+
+\* Se mancano, si esegue solo il layer OSM.
+
+**Output:** `stats` (osm_raw, osm_after_dedup, confirmed, estimated), `hotels[]`
+con `confidence` (`confirmed`=prezzo Booking verificato per le date,
+`estimated`=solo OSM), `price_range` (totale soggiorno, non per notte),
+`url` (link Booking con blocco tariffa, o sito OSM).
+
+---
+
+## search_flights.py — Ricerca ibrida voli (OpenFlights + prezzo browser)
+
+Due layer: **OpenFlights** (dataset rotte, cachato in `.cache/`) per l'esistenza
+della rotta diretta, incrociato con **Google Flights (Selenium)** per il range
+di prezzo. Fallback a link se il browser non è disponibile.
+
+```bash
+# Layer completo (rotta + prezzi)
+uv run --directory scripts/py search_flights.py \
+  --from BLQ --to BUD --date 2026-10-02 --adults 2
+
+# Solo rotta (nessun browser)
+uv run --directory scripts/py search_flights.py --from BLQ --to BUD --date 2026-10-02 --no-browser
+```
+
+| Argomento | Obbligatorio | Descrizione |
+|-----------|-------------|-------------|
+| `--from` | sì | Aeroporto partenza (IATA) |
+| `--to` | sì | Aeroporto arrivo (IATA) |
+| `--date` | sì | Data (YYYY-MM-DD) |
+| `--adults` | no (default 2) | Numero adulti |
+| `--max` | no (default 10) | Max voli in output |
+| `--no-browser` | no | Salta scraping prezzi |
+
+**Output:** `open_layer.route_exists` (rotta diretta nel dataset OpenFlights),
+`confidence` (`confirmed`=rotta+prezzo, `estimated`=solo rotta, `link-only`=niente),
+`price_range` (min/max), `flights[]`, `links`.
+
+> Il dataset OpenFlights viene scaricato al primo uso e cachato in
+> `scripts/py/.cache/` (30 giorni). La presenza nel dataset indica che la rotta
+> è storicamente operata: non garantisce l'operatività in quella data.
+
+---
+
 ## orchestrator.py — Entry-point unico
 
 Dispatcher che chiama gli altri script (`search_poi`, `search_weather`,
-`geocode`, `route_distance`, `generate_links`) tramite subprocess.
+`geocode`, `route_distance`, `search_hotels`, `search_flights`,
+`generate_links`) tramite subprocess.
 
 ```bash
 # POI
@@ -279,6 +355,14 @@ uv run --directory scripts/py orchestrator.py geocode --q "Parlamento Budapest"
 # Distanza
 uv run --directory scripts/py orchestrator.py distance \
   --from "47.498,19.040" --to "47.512,19.045"
+
+# Hotel ibridi
+uv run --directory scripts/py orchestrator.py hotels \
+  --city "Budapest" --checkin 2026-10-02 --checkout 2026-10-04
+
+# Voli ibridi
+uv run --directory scripts/py orchestrator.py flights \
+  --from BLQ --to BUD --date 2026-10-02
 
 # Link
 uv run --directory scripts/py orchestrator.py links \
@@ -295,6 +379,8 @@ uv run --directory scripts/py orchestrator.py accommodations \
 | `weather` | `search_weather.py` |
 | `geocode` | `geocode.py` |
 | `distance` | `route_distance.py` |
+| `hotels` | `search_hotels.py` |
+| `flights` | `search_flights.py` |
 | `links` | `generate_links.py` |
 | `accommodations` | `generate_links.py --type accommodations` |
 

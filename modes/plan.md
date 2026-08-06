@@ -28,6 +28,21 @@ Non proporre destinazioni finché non hai raccolto TUTTI i requisiti qui sotto.
 6. **Mezzo preferito**: Macchina disponibile? O solo mezzi pubblici?
 7. **Stile**: Relax, culturale, natura, misto, cibo?
 
+**REGOLA — Domanda "base fissa vs catena multi-città"**: dopo destinazione e
+date, chiedi SEMPRE all'utente (una domanda, non una regola fissa):
+
+> "Vuoi fare **avanti e indietro dalla città base** (un solo perno, gite
+> giornaliere e rientro la sera) o **soggiornare anche in altre città**
+> (catena multi-tappa con cambio alloggio)?"
+
+In base alla risposta:
+- **Base fissa** → applica i vincoli di distanza/tempo per le gite (rientro in
+  giornata) e alloggio unico.
+- **Catena multi-città** → applica il confronto multimodale (volo/treno/bus) su
+  ogni tappa, il cambio alloggio e le 7 regole di arricchimento per ogni città.
+- Se l'utente dice "flessibile"/"va bene anche altre città", proponi ENTRAMBE le
+  opzioni con costi stimati e chiedi quale preferisce. Non decidere al suo posto.
+
 ### Step 2 — Trasporti (via script deterministici)
 
 Prima di tutto, assicurati che Chrome Docker sia attivo (se non lo è):
@@ -93,6 +108,17 @@ confronta:
 - Combinazioni miste (arrivo BCN, partenza GRO)
 
 Se ci sono differenze di prezzo significative (>€20/pers), segnale all'utente.
+
+**REGOLA — Confronto multimodal (volo vs treno vs bus)**: per OGNI tratta
+inter-città, e per i trasferimenti dentro/verso città vicine, NON limitarti a
+un solo mezzo. Propono SEMPRE e confronta costo+tempi di:
+- volo (solo per tratte lunghe),
+- treno (regionale/statale),
+- **bus a lunga percorrenza (Flixbus, Nettbuss, Vy-ekspress ecc.)**,
+- bus/treno locale per l'aeroporto (es. aereo→centro).
+Per i bus usa websearch/flixbus.com (manca uno script dedicato: `generate_links.py`
+non ha tipo `bus`); per i treni usa `generate_links.py --type trains` o le fonti
+di rotta. Includi SEMPRE i prezzi bus nel confronto, non solo treno/volo.
 
 **REGOLA — Trasporto locale**: per ogni città, consiglia il mezzo più
 economico e veloce per spostarsi.
@@ -160,6 +186,10 @@ risultato a priori. Per ognuno, estrai e mostra:
 6. Alla conferma: salva nome, indirizzo, link, date, costo.
 
 ### Step 4 — Attività e itinerari (via script deterministici)
+
+**REGOLA — applica le 7 Regole di arricchimento itinerario di `_shared.md`**
+(sequenza camminabile con orari/chiusure/prezzi/collegamenti/cibo sulla
+rotta, non un semplice elenco di attrazioni).
 
 1. **Ricerca POI e attrazioni** via Wikipedia API:
    ```

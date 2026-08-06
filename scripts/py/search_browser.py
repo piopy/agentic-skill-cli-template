@@ -183,7 +183,8 @@ def search_google_with_retry(url: str, max_attempts: int = 2) -> tuple[str | Non
 
 
 def search_flights_selenium(origin: str, dest: str, date: str, adults: int) -> dict:
-    url = f"https://www.google.com/travel/flights?q={origin}+{dest}+{date}"
+    url = (f"https://www.google.com/travel/flights?q=flights+from+{origin}+to+{dest}"
+           f"+on+{date}&curr=EUR&hl=it&adults={adults}")
     body, source, no_results = search_google_with_retry(url)
 
     result = {
@@ -266,7 +267,8 @@ HOTEL_LINKS = {
 
 
 def search_hotels_selenium(city: str, checkin: str, checkout: str, adults: int) -> dict:
-    url = f"https://www.google.com/travel/search?q=hotels+in+{urllib.parse.quote(city)}"
+    url = (f"https://www.google.com/travel/search?q=hotels+in+{urllib.parse.quote(city)}"
+           f"&checkIn={checkin}&checkOut={checkout}&adults={adults}&curr=EUR&hl=it")
     body, source, no_results = search_google_with_retry(url)
 
     result = {

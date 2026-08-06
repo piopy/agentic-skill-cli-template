@@ -12,7 +12,9 @@ Usage:
 
 import argparse
 import json
+import random
 import sys
+import time
 import urllib.request
 import urllib.parse
 
@@ -109,6 +111,7 @@ def get_food_info(city: str, lang: str = "it") -> dict:
             f"https://{lang}.wikipedia.org/w/api.php" if lang != "en" else WIKI_API,
             params,
         )
+        time.sleep(random.uniform(0.5, 1.5))
         items = []
         for r in data.get("query", {}).get("search", []):
             items.append({
@@ -127,6 +130,8 @@ def main():
     parser.add_argument("--type", default="all",
                         choices=["all", "attractions", "food", "summary", "events"])
     args = parser.parse_args()
+
+    time.sleep(random.uniform(1.5, 3.5))
 
     result = {"city": args.city, "lang": args.lang, "data": {}}
 

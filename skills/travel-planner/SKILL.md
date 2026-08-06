@@ -31,7 +31,7 @@ Determina il modo da `$mode`:
 
 | Input | Modo |
 |-------|------|
-| (vuoto / nessun argomento) | `discovery` — mostra il menu comandi |
+| (vuoto / nessun argomento) | `plan` — pianificazione vacanza completa stile AI (DEFAULT) |
 | `init` | `init` — costruzione interattiva del framework |
 | `plan` | `plan` — pianificazione vacanza completa stile AI |
 | `transport` | `transport` — ricerca e confronto trasporti (volo/treno/bus) |
@@ -39,11 +39,12 @@ Determina il modo da `$mode`:
 | `analyze` | `analyze` — analisi e confronto link (alloggi, ristoranti, attività) |
 | `report` | `report` — genera guida markdown da dati già decisi |
 
-Se `$mode` non è un comando noto, mostra la **Discovery Mode**.
+Se `$mode` è vuoto → esegui `plan` (default). Se `$mode` non è un comando noto,
+mostra la **Discovery Mode**.
 
 ---
 
-## Discovery Mode (nessun argomento)
+## Discovery Mode (solo per comando non riconosciuto)
 
 Mostra questo menu:
 
@@ -51,14 +52,15 @@ Mostra questo menu:
 travel-planner — Command Center
 
 Comandi disponibili:
-  /travel-planner init      → Costruzione interattiva: ti guido a creare/estendere il framework
-  /travel-planner plan       → Pianificazione vacanza completa stile AI
-  /travel-planner transport  → Ricerca e confronto trasporti (volo/treno/bus)
-  /travel-planner explore    → Scoperta POI, eventi e cibo di una città
-  /travel-planner analyze    → Analisi e confronto link (alloggi, ristoranti, attività)
-  /travel-planner report     → Genera guida markdown da dati già decisi
+  /travel-planner (vuoto) → Pianificazione vacanza completa (DEFAULT)
+  /travel-planner init     → Costruzione interattiva: ti guido a creare/estendere il framework
+  /travel-planner plan     → Pianificazione vacanza completa stile AI
+  /travel-planner transport→ Ricerca e confronto trasporti (volo/treno/bus)
+  /travel-planner explore  → Scoperta POI, eventi e cibo di una città
+  /travel-planner analyze  → Analisi e confronto link (alloggi, ristoranti, attività)
+  /travel-planner report   → Genera guida markdown da dati già decisi
 
-Suggerimento: di default usa /travel-planner plan; se vuoi cambiare qualcosa usa /travel-planner init.
+Suggerimento: di default (senza argomento) esegue /travel-planner plan.
 ```
 
 ---

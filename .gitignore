@@ -14,3 +14,4 @@ data/*
 !data/README.md
 __pycache__
 .venv
+scripts/py/.cache/

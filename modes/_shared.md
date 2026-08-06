@@ -58,6 +58,38 @@ Interpretazione del punteggio:
 Definisci qui i formati riusati da più modi (es. struttura di un report,
 intestazione di una tabella, naming dei file in `output/`).
 
+## Regole di arricchimento itinerario (7 punti)
+
+Quando l'agente costruisce un itinerario (modi `plan`, `explore`, `report`),
+la sola lista da Wikipedia NON basta. DEVE applicare questi 7 fattori di
+ricerca logistica su ogni POI/attività, producendo un itinerario "da guida
+manuale" (sequenzato, con orari e collegamenti), non un semplice elenco:
+
+1. **Orari e chiusure reali.** Per ogni POI verifica giorni/orari di apertura
+   (websearch, Google/Maps, sito ufficiale). Riorganizza i giorni in base alle
+   chiusure (es. museo chiuso dom/lun → pianifica lì l'apertura, non quando
+   capita). Segnala "chiude alle X" per i POI da visitare subito.
+2. **Sequenza geografica reale.** Raggruppa POI per zona. Usa `geocode.py` per
+   le coordinate e `route_distance.py` per distanza/tempo (foot o public).
+   Ordina A→struito, evita andata-e-ritorno. Collega le tappe vicine.
+3. **Fasce orarie fisiche.** Assegna mattina/pomeriggio/sera in base alla luce
+   e agli orari reali (bel punto panoramico verso tramonto; attrazione crea al
+   buio; museo di mattina). L'ultima tappa del giorno = l'alloggio.
+4. **Costi di ogni attività.** Annota prezzo biglietto/ingress e costo del
+   tratto (bus/tren). Usa i totali per decidere se una City Card/Pass conviene.
+5. **Cibo localizzato sul percorso.** Food/streat/food/caffè con recensioni
+   migliori SULLA rotta del giorno (Maps), non "cibo tipico generico". Scegli
+   2-3 per pasto, vicino alle tappe.
+6. **Legatura a hotel e orari di check-in/out.** Tempi coerenti con: arrivo
+   volo/treno, check-in/check-out, bus/tram/treno già fissato. Ritiro bagagli
+   e partenza aereo/o autostazione pianificati con margine.
+7. **Avvertenze pratiche.** Zone meno sicure o critiche, lavori in corso,
+   "a piedi dista troppo → suggerisci tram/bus linea X + minuti". Aggiungi
+   sempre link Maps navigabile e (se tragitto >20 min) numero di linea + tempo.
+
+Sintesi pratica: **itinerario = sequenza camminabile con orari, chiusure,
+prezzi, collegamenti e cibo sulla rotta — non un elenco di attrazioni.**
+
 ## Tool disponibili
 
 Tutti gli script Python vanno eseguiti con `uv run --directory scripts/py/` dalla root del progetto.
@@ -75,3 +107,8 @@ Prima di usare `search_browser.py`, avvia Chrome: `uv run --directory scripts/py
 | `uv run --directory scripts/py route_distance.py ...` | `scripts/py/route_distance.py` | Distanze e tempi tra POI via OSRM |
 | `uv run --directory scripts/py generate_links.py ...` | `scripts/py/generate_links.py` | Genera link di ricerca (fallback) |
 | `uv run --directory scripts/py chrome_driver.py start\|stop` | `scripts/py/chrome_driver.py` | Gestisce Chrome in Docker per Selenium |
+
+**Nota bus intercity**: non esiste uno script dedicato agli autobus a lunga
+percorrenza (es. Flixbus). Per proporre prezzi bus usa websearch (es.
+"Flixbus CittàX CittàY") o flixbus.com, e confronta SEMPRE costo+tempi
+rispetto a treno e volo (vedi regola multimodale in `plan.md`).
