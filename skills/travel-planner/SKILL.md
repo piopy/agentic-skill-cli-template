@@ -24,6 +24,8 @@ Questo file è il **punto d'ingresso** del framework. L'utente scrive
 8. **Ritorno da città vicine** — verifica se volare dal ritorno da un aeroporto vicino è più economico. Includi costo spostamento via bus/treno.
 9. **Swap mete per città singola** — confronta combinazioni miste arrivo/partenza tra aeroporto principale e alternativi.
 10. **Trasporto locale** — per ogni città, consiglia il mezzo più economico e veloce (metro preferibile, a piedi se <2km). Calcola distanze con route_distance.py. Per Barcellona: T-casual 10 corse o Aerobús dall'aeroporto.
+11. **Alloggi = scraping live per default** — per prezzi E disponibilità reale di hotel/alloggi, usa SEMPRE lo scraping Selenium live via `search_hotels.py` / `scrape_prices` su Booking con date e adulti esatti. I prezzi mostrati su websearch/siti terzi possono includere strutture NON prenotabili o con prezzi sbagliati per il gruppo. Filtra per disponibilità effettiva (`matching_block_id` / prezzo reale per quelle date) prima di proporre.
+12. **Voli = MAI inventare dati** — se prezzi/orari del volo per le date non sono disponibili dal live scraping (`search_browser.py flights` su Google Flights) perché troppo lontani nel tempo, NON fabbricare né prezzi né orari né rotte dirette: scrivi esplicitamente "tariffe non ancora in vendita, verificare su Ryanair/Skyscanner" e dai i link di ricerca reali. Verifica SEMPRE anche i giorni di operatività della rotta diretta (rotte low-cost volano spesso solo 2-4 giorni/sett.) prima di affermare che un diretto esiste in quella data.
 
 ## Routing dei modi
 
