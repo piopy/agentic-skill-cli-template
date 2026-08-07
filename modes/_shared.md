@@ -99,7 +99,8 @@ Prima di usare `search_browser.py`, avvia Chrome: `uv run --directory scripts/py
 |---------|--------|---------|
 | `node scripts/validate.mjs` | `scripts/validate.mjs` | Valida i dati di input |
 | `uv run --directory scripts/py search_browser.py flights ...` | `scripts/py/search_browser.py` | Cerca voli reali via Selenium + Chrome |
-| `uv run --directory scripts/py search_browser.py hotels ...` | `scripts/py/search_browser.py` | Cerca hotel reali via Selenium + Chrome |
+| `uv run --directory scripts/py search_browser.py hotels ...` | `scripts/py/search_browser.py` | Cerca hotel via links (fallback) |
+| `uv run --directory scripts/py search_hotels.py --city ... --checkin ... --checkout ... --adults ...` | `scripts/py/search_hotels.py` | **DEFAULT per alloggi**: scraping Booking live con disponibilità+prezzi reali per date/adulti (`scrape_prices`). Nota: richiede Overpass, se fallisce usa `scrape_prices` direttamente |
 | `uv run --directory scripts/py search_multi.py ...` | `scripts/py/search_multi.py` | Confronto rotte diretta/inversa + skiplagging |
 | `uv run --directory scripts/py search_poi.py ...` | `scripts/py/search_poi.py` | POI, attrazioni, cibo via Wikipedia API |
 | `uv run --directory scripts/py search_weather.py ...` | `scripts/py/search_weather.py` | Previsioni meteo via Open-Meteo |

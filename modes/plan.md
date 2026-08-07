@@ -163,14 +163,19 @@ Salva orari, costi, link.
 
 ### Step 3 — Alloggio (via script deterministici)
 
-**REGOLA — Valuta TUTTI i risultati**: lo script `search_browser.py hotels`
-restituisce TUTTE le opzioni disponibili nella pagina. Non scartare nessun
-risultato a priori. Per ognuno, estrai e mostra:
+**REGOLA — Valuta TUTTI i risultati e DEFAUL US scraping vivo per disponibilità**:
+   Per ogni città usare SEMPRE `search_hotels.py` (scraping Booking live) con
+   date e adulti esatti, così prezzi e strutture sono que effettivamente
+   prenotabili per il vostro gruppo/date. `search_browser.py hotels` su Selenium
+   può non estrarre i prezzi (es. Budapest li nasconde dietro `&nbsp;`); in tal
+   caso usa `scrape_prices` di `search_hotels.py` direttamente. Non usare
+   soltanto websearch/siti terzi: possono elencare strutture NON prenotabili.
 
-1. Per ogni città/tappa: cerca hotel reali:
+1. Per ogni città/tappa: cerca hotel reali e verificabili:
    ```
-   uv run --directory scripts/py search_browser.py hotels --city "<CITTA>" --checkin YYYY-MM-DD --checkout YYYY-MM-DD --adults <N>
+   uv run --directory scripts/py search_hotels.py --city "<CITTA>" --checkin YYYY-MM-DD --checkout YYYY-MM-DD --adults <N> --max <N>
    ```
+   Se Overpass fallisce, chiama `scrape_prices(city, checkin, checkout, adults)` da `scripts/py/search_hotels.py`.
 
 2. Estrai dall'output JSON completo TUTTI gli hotel con prezzo, nome e rating.
    Se un hotel appare sia nella sezione "sponsored" che in "view prices",
