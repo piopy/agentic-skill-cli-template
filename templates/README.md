@@ -20,3 +20,6 @@ User Layer (`config/`, `data/`); il file finale prodotto va in `output/`.
 
 ## Incluso nel template
 - `report-template.md` — esempio con segnaposto `{{...}}`.
+- `vacanza-html.html` — pagina HTML autonoma e condivisibile (CSS inline, nessuna risorsa esterna), popolata da `render_vacanza_html.py` a partire da un `vacanza.json`. Segnaposto `{{section_*}}` riempiti dal rendering dello script; link di prenotazione in evidenza in testa.
+- `vacanza.json` — skeleton di partenza per creare il `vacanza.json` di un nuovo viaggio (tutti i campi con placeholder `<...>`).
+- `vacanza.schema.json` — JSON Schema (draft-07) che descrive e valida la struttura di un `vacanza.json`.

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{hero_name}} — {{hero_dates}}</title>
+<style>
+:root{
+  --accent:{{accent}}; --accent-2:{{accent2}}; --ink:#1f2430; --muted:#667085; --soft:#f4f6fb; --card:#ffffff; --line:#e6e9f2;
+  --radius:18px; --shadow:0 10px 30px rgba(28,33,60,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--soft);color:var(--ink);line-height:1.55}
+.wrap{max-width:860px;margin:0 auto;padding:18px 16px 60px}
+.hero{background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:calc(var(--radius) + 6px);padding:30px 24px;color:#fff;box-shadow:var(--shadow)}
+.hero .kicker{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;opacity:.85;margin:0 0 6px}
+.hero h1{margin:0 0 10px;font-size:1.7rem;line-height:1.2}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);padding:5px 12px;border-radius:999px;font-size:.82rem}
+.bookbar{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+.btn{flex:1 1 240px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-weight:700;font-size:.92rem;padding:14px 16px;border-radius:14px;transition:transform .12s ease,box-shadow .12s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;box-shadow:var(--shadow)}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:var(--shadow)}
+section{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 20px;margin-top:18px}
+h2{font-size:1.15rem;margin:0 0 14px;display:flex;align-items:center;gap:8px}
+h3{font-size:.95rem;margin:0 0 6px}
+.card{border:1px solid var(--line);border-radius:14px;padding:14px 14px;margin-top:12px;background:#fff}
+.card .row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.muted{color:var(--muted);font-size:.85rem}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:var(--soft);color:var(--muted);border-radius:6px;padding:2px 8px;margin-bottom:6px}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line)}
+th{font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+.score{border-radius:10px;padding:4px 10px;font-weight:800;color:#fff;white-space:nowrap}
+.s-49{background:#0ca678}.s-47{background:#12b886}.s-42{background:#38d9a9}
+.sv-ot{color:#0ca678;font-weight:700}
+.sv-bu{color:#f08c00;font-weight:700}
+.day{border:1px solid var(--line);border-radius:14px;margin-top:16px;overflow:hidden}
+.dayhead{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;padding:12px 16px;font-weight:800}
+.slot{padding:14px 16px 10px;border-top:1px solid var(--line)}
+.slot h4{margin:0 0 10px;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.item{margin:0 0 12px}
+.item b{display:block}
+.item a{color:var(--accent);text-decoration:none;font-size:.85rem}
+.item .note{font-size:.85rem;color:var(--muted);margin-top:2px}
+table.budget td:first-child{color:var(--muted)}
+table.budget tr:last-child{font-weight:800;color:var(--accent)}
+footer{margin-top:26px;font-size:.78rem;color:var(--muted);text-align:center}
+a{word-break:break-word}
+@media print{body{background:#fff}.hero,.dayhead,.btn.primary{print-color-adjust:exact;-webkit-print-color-adjust:exact}body,.wrap{max-width:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <p class="kicker">✈️ {{hero_kicker}}</p>
+    <h1>{{hero_name}}</h1>
+    <div class="chips">
+      <span class="chip">📅 {{hero_dates}}</span>
+      <span class="chip">👥 {{hero_people}}</span>
+      <span class="chip">💰 {{hero_budget}}</span>
+      <span class="chip">📍 {{hero_destination}}</span>
+    </div>
+  </div>
+
+  <div class="bookbar">
+{{section_booking}}
+  </div>
+
+{{section_transports}}
+{{section_accommodations}}
+{{section_neighborhoods}}
+{{section_itinerary}}
+{{section_events}}
+{{section_budget}}
+{{section_notes}}
+
+  <footer>Generato con ❤️ da travel-planner — verifica prezzi e disponibilità prima di prenotare.</footer>
+</div>
+</body>
+</html>

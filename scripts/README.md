@@ -24,6 +24,7 @@ Tutti gli script Python vanno eseguiti con `uv run --directory scripts/py/ <scri
 | **`search_browser.py`** | **Ricerca reale via Selenium + Chrome** (voli, hotel) | `flights --from BLQ --to BCN --date 2026-10-02` |
 | **`search_multi.py`** | **Confronto rotte (diretta/inversa) + skiplagging** | `--from BLQ --cities BCN,VLC --date 2026-10-02 --returndate 2026-10-05` |
 | `chrome_driver.py` | Avvia/ferma Chrome in Docker | `start` / `stop` / `status` |
+| `render_vacanza_html.py` | Genera HTML condivisibile da `vacanza.json` (file autonomo, CSS inline) | `output/barcellona-maggio-2027/vacanza.json` |
 
 ### Uso combinato consigliato
 ```bash

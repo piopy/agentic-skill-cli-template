@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "vacanza",
+  "description": "Dati strutturati di una vacanza pianificata (output/<nome-viaggio>/vacanza.json). Riferimento canonico: la struttura è guidata SEMPRE dai dati reali di Google Flights / Google Hotels.",
+  "type": "object",
+  "required": ["name", "dates", "people", "budget", "destination"],
+  "properties": {
+    "name": { "type": "string", "description": "Nome descrittivo del viaggio, es. 'Barcellona — weekend lungo (base fissa)'" },
+    "kicker": { "type": "string", "description": "OPZIONALE: sottotitolo in testa alla pagina HTML. Default generico se assente" },
+    "dates": { "type": "string", "description": "Date del viaggio, es. '21–24 maggio 2027'" },
+    "people": { "type": "string", "description": "Persone, es. '2 adulti'" },
+    "budget": { "type": "string", "description": "Budget dichiarato, es. 'Medio-basso (<700 € a persona, trasporto solo mezzi pubblici)'" },
+    "destination": { "type": "string", "description": "Destinazione con aeroporto e tipo, es. 'Barcellona (BCN), Spagna — base fissa (solo BCN, escursioni giornaliere)'" },
+    "transports": {
+      "type": "array",
+      "description": "Trasporti: andata, ritorno e spostamenti locali. Per i voli usare link Google Flights round-trip `?q=<da>+<a>+<andata>+<ritorno>` quando entrambe le date sono note",
+      "items": {
+        "type": "object",
+        "required": ["type", "mode"],
+        "properties": {
+          "type": { "type": "string", "enum": ["outbound", "return", "local"], "description": "outbound=andata, return=ritorno, local=spostamento in loco" },
+          "mode": { "type": "string", "description": "Mezzo e compagnia, es. 'Volo — Vueling (diretto BLQ→BCN)'" },
+          "link": { "type": "string", "description": "Link di prenotazione/ricerca (Google Flights, Aerobús, treno...)" },
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "departure": { "type": "string", "description": "Orario di partenza (o frequenza per mezzi locali)" },
+          "arrival": { "type": "string", "description": "Orario di arrivo (o durata)" },
+          "cost": { "type": "string", "description": "Costo per persona / totale, es. '88 € a persona'" }
+        }
+      }
+    },
+    "accommodations": {
+      "type": "array",
+      "description": "Alloggi valutati e scelti. 'link' = ricerca Google Hotels generica per zona (con ts/qs/ap che fissano le date); il link specifico per nome viene generato dal renderer, overridabile con 'search_link'",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string", "description": "Nome dell'alloggio, es. 'Hotel Pelayo (scelto)'" },
+          "link": { "type": "string", "description": "Link Google Hotels GENERICO per la zona (tutte le opzioni), con hl/ts/qs/ap" },
+          "search_link": { "type": "string", "description": "OPZIONALE: override del link specifico per nome (se l'auto-generato non va bene)" },
+          "city": { "type": "string", "description": "'Città — quartiere (indirizzo)'" },
+          "dates": { "type": "string", "description": "Date del soggiorno" },
+          "address": { "type": "string", "description": "Dettagli: categoria, posizione, check-in/out" },
+          "cost": { "type": "string", "description": "Costo (a notte e/o totale soggiorno)" },
+          "note": { "type": "string", "description": "Note: cancellazione, alternative scartate..." }
+        }
+      }
+    },
+    "neighborhoods": {
+      "type": "array",
+      "description": "Quartieri dal pannello 'Dove alloggiare' di Google Hotels (OBBLIGATORIO includerli): punteggio posizione, giudizio, prezzo medio/notte, 'Noto per'",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "score": { "type": "string", "description": "Punteggio posizione x/5, es. '4,6'" },
+          "verdict": { "type": "string", "description": "Giudizio: Eccellente / Ottimo / Buono" },
+          "avg_price_night": { "type": "string", "description": "Prezzo medio per notte in zona, es. '222 €'" },
+          "known_for": { "type": "string", "description": "'Noto per' (voci separate da virgola)" }
+        }
+      }
+    },
+    "itinerary": {
+      "type": "array",
+      "description": "Programma giorno per giorno. Ogni item di morning/afternoon/evening è una stringa oppure un oggetto {name, link, note}",
+      "items": {
+        "type": "object",
+        "required": ["day", "date"],
+        "properties": {
+          "day": { "type": "integer", "description": "Numero giorno (1-based)" },
+          "date": { "type": "string", "description": "Titolo del giorno, es. 'Venerdì 21 maggio — arrivo e prima serata in centro'" },
+          "morning": { "type": "array", "items": { "description": "POI/attività: stringa o {name, link, note}" } },
+          "afternoon": { "type": "array", "items": { "description": "POI/attività: stringa o {name, link, note}" } },
+          "evening": { "type": "array", "items": { "description": "POI/attività: stringa o {name, link, note}" } }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "description": "Eventi/concerti/mostre (facoltativo; se nessuno confermato, segnalarlo in notes)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "link": { "type": "string" },
+          "date": { "type": "string" },
+          "cost": { "type": "string" }
+        }
+      }
+    },
+    "budgetSummary": {
+      "type": "object",
+      "description": "Voci di budget in ordine di presentazione. La voce che inizia con 'TOTALE' viene evidenziata nella tabella HTML",
+      "additionalProperties": { "type": "string" }
+    },
+    "notes": { "type": "string", "description": "Note generali: meteo, trasporto locale, tempistiche prenotazione, avvertenze pratiche" }
+  }
+}

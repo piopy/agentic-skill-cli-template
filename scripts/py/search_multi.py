@@ -24,7 +24,7 @@ SCRIPTS_DIR = Path(__file__).parent
 SELENIUM_URL = "http://localhost:4444/wd/hub"
 
 
-def search_google_flights(origin: str, dest: str, date: str) -> list[dict]:
+def search_google_flights(origin: str, dest: str, date: str, return_date: str = "") -> list[dict]:
     """Cerca voli via Selenium e restituisce prezzi strutturati."""
     from selenium import webdriver
     from selenium.webdriver.common.by import By
@@ -43,7 +43,7 @@ def search_google_flights(origin: str, dest: str, date: str) -> list[dict]:
             "source": "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
         })
 
-        url = f"https://www.google.com/travel/flights?q={origin}+{dest}+{date}"
+        url = f"https://www.google.com/travel/flights?q={origin}+{dest}+{date}" + (f"+{return_date}" if return_date else "")
         driver.get(url)
         time.sleep(8)
 
@@ -82,8 +82,8 @@ def search_google_flights(origin: str, dest: str, date: str) -> list[dict]:
         return [{"error": str(e)}]
 
 
-def search_one_way(origin: str, dest: str, date: str) -> list[dict]:
-    return search_google_flights(origin, dest, date)
+def search_one_way(origin: str, dest: str, date: str, return_date: str = "") -> list[dict]:
+    return search_google_flights(origin, dest, date, return_date)
 
 
 def main():
@@ -112,22 +112,22 @@ def main():
     # 1. Rotta diretta: origin → City1, City2 → origin
     result["direct_routes"]["outbound"] = {
         "route": f"{origin} → {cities[0]}",
-        "flights": search_one_way(origin, cities[0], args.date),
+        "flights": search_one_way(origin, cities[0], args.date, args.returndate),
     }
     result["direct_routes"]["return"] = {
         "route": f"{cities[-1]} → {origin}",
-        "flights": search_one_way(cities[-1], origin, args.returndate),
+        "flights": search_one_way(cities[-1], origin, args.returndate, args.date),
     }
 
     # 2. Rotta inversa: origin → City2, City1 → origin
     if len(cities) >= 2:
         result["reverse_routes"]["outbound"] = {
             "route": f"{origin} → {cities[-1]}",
-            "flights": search_one_way(origin, cities[-1], args.date),
+            "flights": search_one_way(origin, cities[-1], args.date, args.returndate),
         }
         result["reverse_routes"]["return"] = {
             "route": f"{cities[0]} → {origin}",
-            "flights": search_one_way(cities[0], origin, args.returndate),
+            "flights": search_one_way(cities[0], origin, args.returndate, args.date),
         }
 
     # 3. Skiplagging: cercare A→C via B costa meno di A→B diretto

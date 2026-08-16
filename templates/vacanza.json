@@ -1,0 +1,79 @@
+{
+  "name": "<Nome viaggio, es. Barcellona — weekend lungo (base fissa)>",
+  "kicker": "<OPZIONALE: sottotitolo in testa all'HTML>",
+  "dates": "<Date, es. 21–24 maggio 2027>",
+  "people": "<persone, es. 2 adulti>",
+  "budget": "<budget, es. Medio-basso (<700 € a persona)>",
+  "destination": "<Destinazione (COD), paese — tipo di viaggio, es. Barcellona (BCN), Spagna — base fissa>",
+  "transports": [
+    {
+      "type": "outbound",
+      "mode": "<mezzo — compagnia, es. Volo — Vueling (diretto BLQ→BCN)>",
+      "link": "<Google Flights ROUND-TRIP: https://www.google.com/travel/flights?q=<da>+<a>+<andata>+<ritorno>>",
+      "from": "<Da, es. Bologna (BLQ)>",
+      "to": "<A, es. Barcellona (BCN)>",
+      "departure": "<orario, es. 14:30>",
+      "arrival": "<orario, es. 16:20>",
+      "cost": "<costo, es. 88 € a persona>"
+    },
+    {
+      "type": "return",
+      "mode": "<mezzo — compagnia>",
+      "link": "<stesso link round-trip>",
+      "from": "<A (COD)>",
+      "to": "<Da (COD)>",
+      "departure": "<orario>",
+      "arrival": "<orario>",
+      "cost": "<costo>"
+    }
+  ],
+  "accommodations": [
+    {
+      "name": "<Nome hotel (scelto)>",
+      "link": "<Google Hotels GENERICO per zona (tutte le opzioni), con hl/ts/qs/ap>",
+      "search_link": "<OPZIONALE: override link specifico per nome>",
+      "city": "<Città — quartiere (indirizzo)>",
+      "dates": "<date soggiorno>",
+      "address": "<categoria, posizione, check-in/out>",
+      "cost": "<costo a notte / totale>",
+      "note": "<cancellazione, alternative scartate>"
+    }
+  ],
+  "neighborhoods": [
+    {
+      "name": "<Quartiere>",
+      "score": "<punteggio posizione x/5, es. 4,6>",
+      "verdict": "<Eccellente / Ottimo / Buono>",
+      "avg_price_night": "<prezzo medio/notte, es. 222 €>",
+      "known_for": "<voci separate da virgola>"
+    }
+  ],
+  "itinerary": [
+    {
+      "day": 1,
+      "date": "<Giorno N, data — titolo>",
+      "morning": [
+        {
+          "name": "<POI / attività>",
+          "link": "<maps/search/... in google.com/maps/search/Nome+Luogo>",
+          "note": "<dettaglio pratico>"
+        }
+      ],
+      "afternoon": [],
+      "evening": []
+    }
+  ],
+  "events": [
+    {
+      "name": "<evento>",
+      "link": "<link>",
+      "date": "<data>",
+      "cost": "<costo>"
+    }
+  ],
+  "budgetSummary": {
+    "<Voce di spesa>": "<costo>",
+    "TOTALE indicativo": "<costo>"
+  },
+  "notes": "<note generali: meteo, trasporti locali, prenotazioni, avvertenze>"
+}

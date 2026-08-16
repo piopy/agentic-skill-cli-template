@@ -55,6 +55,26 @@ Interpretazione del punteggio:
 
 ## Formati di output condivisi
 
+**Convention output (OBBLIGATORIO):** ogni viaggio pianificato produce una
+cartella `output/<nome-viaggio>/` (nome descrittivo, es. `barcellona-maggio-2027`,
+`thailandia-dicembre-2027`) contenente:
+1. il **report** in markdown (`<nome-viaggio>.md`);
+2. il file **`vacanza.json`** con TUTTI i dati strutturati del viaggio
+   (trasporti, alloggi, quartieri da Google Hotels, itinerario, eventi,
+   budget, note) — creato **sempre al momento della creazione del report**,
+   mantenendolo allineato. Parti da `templates/vacanza.json` (skeleton con
+   placeholder) e usa `templates/vacanza.schema.json` come riferimento della
+   struttura;
+3. la pagina **HTML condivisibile** per utente finale e compagni di viaggio,
+   generata DOPO il report/JSON con
+   `uv run --directory scripts/py render_vacanza_html.py output/<nome-viaggio>/vacanza.json`
+   (output di default in `output/<nome-viaggio>/<slug>.html`). File autonomo:
+   CSS inline, nessuna risorsa esterna, link di prenotazione (volo/hotel) in
+   evidenza in testa e link Google Maps per ogni POI.
+
+Non usare più un singolo `data/vacanza.json`: il JSON di ogni viaggio vive
+nella propria cartella in `output/`.
+
 Definisci qui i formati riusati da più modi (es. struttura di un report,
 intestazione di una tabella, naming dei file in `output/`).
 
@@ -127,13 +147,14 @@ Prima di usare `search_browser.py`, avvia Chrome: `uv run --directory scripts/py
 | `uv run --directory scripts/py route_distance.py ...` | `scripts/py/route_distance.py` | Distanze e tempi tra POI via OSRM |
 | `uv run --directory scripts/py generate_links.py ...` | `scripts/py/generate_links.py` | Genera link di ricerca (fallback) |
 | `uv run --directory scripts/py chrome_driver.py start\|stop` | `scripts/py/chrome_driver.py` | Gestisce Chrome in Docker per Selenium |
+| `uv run --directory scripts/py render_vacanza_html.py <vacanza.json> [--out file.html]` | `scripts/py/render_vacanza_html.py` | Genera pagina HTML autonoma e condivisibile da un `vacanza.json` (template `templates/vacanza-html.html`, CSS inline, link di prenotazione in evidenza) |
 
 ## Note
 
 **Flusso alloggi (nuovo default 2026)**: Google Hotels per scoprire hotel e prezzi (per notte) → poi Booking (`search_hotels.py scrape_prices`) per verificare disponibilità reale, prezzo totale per soggiorno e cancellazione gratuita. Google Hotels è più robusto contro i cambi layout di Booking.
 
 **REGOLA LINK DEFAULT (sempre)**: per ogni tratta/opzione proposta includi SEMPRE:
-1. il link **Google Flights** (formato `https://www.google.com/travel/flights?q=<da>+<a>+<YYYY-MM-DD>`, con date nel query) — così se la tariffa specifica risulta occupata, l'utente clicca e vede TUTTE le opzioni rimaste;
+1. il link **Google Flights** (formato `https://www.google.com/travel/flights?q=<da>+<a>+<YYYY-MM-DD>`, con date nel query) — così se la tariffa specifica risulta occupata, l'utente clicca e vede TUTTE le opzioni rimaste. **Se la vacanza è A/R con date di andata e ritorno note, usa il formato round-trip** `?q=<da>+<a>+<data-andata>+<data-ritorno>` (es. `?q=blq+bcn+2027-05-21+2027-05-24`): così Google Flights carica direttamente andata e ritorno con le date corrette. Stesso link round-trip per le voci andata e ritorno nei trasporti;
 2. il link **Google Hotels** (formato con parametri `ts`/`qs`/`ap` che fissano le date corrette, cfr. `search_browser.py` / blob ts) con tutte le opzioni per città/quartiere — così se l'hotel scelto è occupato, l'utente clicca e vede le alternative rimaste. Filtro "Casa vacanze" incluso.
 Non proporre più Skyscanner/Booking come link primari di riferimento.
 
