@@ -12,6 +12,7 @@ Usage:
 """
 
 import argparse
+import collections
 import json
 import re
 import sys
@@ -20,6 +21,8 @@ import urllib.parse
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+from ts_blob import build_ts
 
 SELENIUM_URL = "http://localhost:4444/wd/hub"
 COOKIE_BTNS = [
@@ -146,7 +149,7 @@ FLIGHT_LINKS = {
 }
 
 
-def search_google_with_retry(url: str, max_attempts: int = 2) -> tuple[str | None, str | None, bool]:
+def search_google_with_retry(url: str, max_attempts: int = 2) -> tuple[str | None, str | None, bool, str | None]:
     for attempt in range(max_attempts):
         driver = _get_driver()
         wait = WebDriverWait(driver, 15)
@@ -162,6 +165,7 @@ def search_google_with_retry(url: str, max_attempts: int = 2) -> tuple[str | Non
 
             body = driver.find_element(By.TAG_NAME, "body").text
             source = driver.page_source
+            final_url = driver.current_url
 
             no_results = any(p in body for p in [
                 "No results returned", "Nessun risultato"
@@ -172,20 +176,20 @@ def search_google_with_retry(url: str, max_attempts: int = 2) -> tuple[str | Non
                 continue
 
             driver.quit()
-            return body, source, no_results
+            return body, source, no_results, final_url
         except Exception:
             driver.quit()
             if attempt < max_attempts - 1:
                 time.sleep(3)
                 continue
-            return None, None, True
-    return None, None, True
+            return None, None, True, None
+    return None, None, True, None
 
 
 def search_flights_selenium(origin: str, dest: str, date: str, adults: int) -> dict:
     url = (f"https://www.google.com/travel/flights?q=flights+from+{origin}+to+{dest}"
            f"+on+{date}&curr=EUR&hl=it&adults={adults}")
-    body, source, no_results = search_google_with_retry(url)
+    body, source, no_results, _final_url = search_google_with_retry(url)
 
     result = {
         "flights": [],
@@ -269,13 +273,26 @@ HOTEL_LINKS = {
 def search_hotels_selenium(city: str, checkin: str, checkout: str, adults: int) -> dict:
     url = (f"https://www.google.com/travel/search?q=hotels+in+{urllib.parse.quote(city)}"
            f"&checkin={checkin}&checkout={checkout}&adults={adults}&curr=EUR&hl=it")
-    body, source, no_results = search_google_with_retry(url)
+    body, source, no_results, final_url = search_google_with_retry(url)
 
     result = {
         "hotels": [],
         "no_results": no_results,
         "note": None,
+        "ts": None,
+        "google_hotels_link": None,
     }
+
+    if final_url:
+        q = urllib.parse.parse_qs(urllib.parse.urlparse(final_url).query)
+        ts = (q.get("ts") or [None])[0]
+
+    if not ts and source:
+        ts = _ts_from_source(source, city, checkin, checkout)
+
+    if ts:
+        result["ts"] = ts
+        result["google_hotels_link"] = build_google_hotels_link(city, ts)
 
     if body is None or no_results:
         if no_results:
@@ -324,10 +341,33 @@ def search_hotels_selenium(city: str, checkin: str, checkout: str, adults: int) 
     return result
 
 
-def gen_hotel_links(city: str, checkin: str, checkout: str, adults: int) -> dict:
+def build_google_hotels_link(city: str, ts: str) -> str:
+    city_q = urllib.parse.quote(city)
+    return f"https://www.google.com/travel/search?q=hotels+in+{city_q}&hl=it&ts={ts}&qs=CAE4DQ&ap=MAE"
+
+
+def _ts_from_source(source: str, city: str, checkin: str, checkout: str) -> str | None:
+    gaias = re.findall(r'0x[0-9a-f]{8,}:0x[0-9a-f]{8,}', source)
+    if not gaias:
+        return None
+    gaia = collections.Counter(gaias).most_common(1)[0][0]
+    label = city.split(",")[0].strip()
+    try:
+        y1, m1, d1 = map(int, checkin.split("-"))
+        y2, m2, d2 = map(int, checkout.split("-"))
+    except (ValueError, AttributeError):
+        return None
+    return build_ts(gaia, label, y1, m1, d1, y2, m2, d2)
+
+
+def gen_hotel_links(city: str, checkin: str, checkout: str, adults: int, ts: str | None = None) -> dict:
     links = {}
     city_q = urllib.parse.quote(city)
+    if ts:
+        links["google_hotels"] = build_google_hotels_link(city, ts)
     for name, tmpl in HOTEL_LINKS.items():
+        if name == "google_hotels" and ts:
+            continue
         links[name] = tmpl.format(
             city_q=city_q, checkin=checkin,
             checkout=checkout, adults=adults,
@@ -398,15 +438,24 @@ def main():
                 result["note"] = (result.get("note") or "") + " Dati browser incompleti. Usa il link Skyscanner qui sopra."
 
     elif args.command == "hotels" and args.city and args.checkin and args.checkout:
-        result["links"] = cmd["links"](args.city, args.checkin, args.checkout, args.adults)
+        resp = None
+        if not args.dry_run:
+            resp = cmd["selenium"](args.city, args.checkin, args.checkout, args.adults)
+            ts = (resp or {}).get("ts")
+        else:
+            ts = None
+        result["links"] = cmd["links"](args.city, args.checkin, args.checkout, args.adults, ts)
         result["city"] = args.city
         result["checkin"] = args.checkin
         result["checkout"] = args.checkout
-        if not args.dry_run:
-            resp = cmd["selenium"](args.city, args.checkin, args.checkout, args.adults)
+        if resp:
             result["data"] = resp.get("hotels", [])
             if resp.get("note"):
                 result["note"] = resp["note"]
+            if resp.get("ts"):
+                result["ts"] = resp["ts"]
+            if resp.get("google_hotels_link"):
+                result["links"]["google_hotels"] = resp["google_hotels_link"]
             if result["data"]:
                 result["source"] = "selenium"
 
