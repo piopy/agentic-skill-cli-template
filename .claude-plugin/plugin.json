@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "AI Travel Planner — pianificatore di vacanze in stile AI",
   "author": {
-    "name": "Il tuo nome",
-    "url": "https://example.com"
+    "name": "piopy",
+    "url": "https://piopy.github.io"
   },
   "skills": true,
   "permissions": {

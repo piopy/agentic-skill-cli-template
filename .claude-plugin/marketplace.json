@@ -1,10 +1,9 @@
 {
   "name": "travel-planner",
-    "description": "AI Travel Planner — pianificatore di vacanze in stile AI"
-  },
+  "description": "AI Travel Planner — pianificatore di vacanze in stile AI",
   "owner": {
-    "name": "Il tuo nome",
-    "url": "https://example.com"
+    "name": "piopy",
+    "url": "https://piopy.github.io"
   },
   "plugins": [
     {

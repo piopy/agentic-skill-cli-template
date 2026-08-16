@@ -97,9 +97,13 @@ manuale" (sequenzato, con orari e collegamenti), non un semplice elenco:
    buio; museo di mattina). L'ultima tappa del giorno = l'alloggio.
 4. **Costi di ogni attività.** Annota prezzo biglietto/ingress e costo del
    tratto (bus/tren). Usa i totali per decidere se una City Card/Pass conviene.
-5. **Cibo localizzato sul percorso.** Food/streat/food/caffè con recensioni
-   migliori SULLA rotta del giorno (Maps), non "cibo tipico generico". Scegli
-   2-3 per pasto, vicino alle tappe.
+5. **Cibo localizzato sul percorso (OBBLIGATORIO).** Per ogni città/tappa,
+   cerca SEMPRE bar, ristoranti e locali tipici dove mangiare in zona, non
+   limitarti ai "ristoranti generici". Le proposte devono avere recensioni
+   reali: verifica su Google Maps (score + n° recensioni) e cross-reference
+   con TripAdvisor/TheFork quando disponibili. Preferisci locali tipici
+   (cucina locale, street food, agriturismi) con buon rapporto qualità/prezzo.
+   Scegli 2-3 opzioni per pasto, vicino alle tappe del giorno, con link Maps.
 6. **Legatura a hotel e orari di check-in/out.** Tempi coerenti con: arrivo
    volo/treno, check-in/check-out, bus/tram/treno già fissato. Ritiro bagagli
    e partenza aereo/o autostazione pianificati con margine.

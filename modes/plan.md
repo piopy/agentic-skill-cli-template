@@ -230,8 +230,12 @@ rotta, non un semplice elenco di attrazioni).
 ### Step 5 — Cibo
 
 1. Ricerca la cucina tipica locale.
-2. Su Google Maps: trova locali con recensioni migliori per quei piatti.
-3. Proponi 2-3 opzioni per pasto principale con link Maps.
+2. **Cerca SEMPRE bar, ristoranti e locali tipici dove mangiare in zona**
+   (anche street food, trattorie, agriturismi), con recensioni reali:
+   Google Maps (score + n° recensioni) e cross-reference con
+   TripAdvisor/TheFork quando disponibili.
+3. Proponi 2-3 opzioni per pasto principale con link Maps, costo indicato e
+   vicino all'itinerario del giorno.
 4. Considera costo e posizione (vicino all'itinerario del giorno).
 5. L'utente sceglie.
 

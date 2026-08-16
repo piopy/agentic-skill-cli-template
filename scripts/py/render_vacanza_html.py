@@ -36,7 +36,7 @@ PALETTES = [
     ("#14b8a6", "#0891b2"),   # teal → cyan
 ]
 
-TRANS_LABEL = {"outbound": "Germania ✈️", "return": "Ritorno ↘", "local": "In città 🚇"}
+TRANS_LABEL = {"outbound": "Andata ✈️", "return": "Ritorno ↘", "local": "In città 🚇"}
 
 
 def esc(s: object) -> str:
