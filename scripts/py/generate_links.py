@@ -21,8 +21,8 @@ def build_skyscanner(origin: str, dest: str, date: str, adults: int = 2) -> str:
             f"{date_compact}/?adultsv2={adults}")
 
 
-def build_google_flights(origin: str, dest: str, date: str, return_date: str = "") -> str:
-    q = f"{origin}+{dest}+{date}" + (f"+{return_date}" if return_date else "")
+def build_google_flights(origin: str, dest: str, date: str, adults: int = 2, return_date: str = "") -> str:
+    q = f"{origin}+{dest}+{date}" + (f"+{return_date}" if return_date else "") + f"+{adults}+adults"
     return f"https://www.google.com/travel/flights?q={q}"
 
 
@@ -147,7 +147,7 @@ def main():
                 pass
         if args.return_date:
             result["links"]["google_flights_roundtrip"] = build_google_flights(
-                args.origin, args.dest, args.date, args.return_date)
+                args.origin, args.dest, args.date, args.adults, args.return_date)
 
     if args.type in ("trains", "all") and args.origin and args.dest and args.date:
         for name, builder in TRAIN_PROVIDERS.items():

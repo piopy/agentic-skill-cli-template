@@ -81,7 +81,7 @@ def build_links(origin: str, dest: str, date: str, adults: int) -> dict:
             f"{date_compact}/?adultsv2={adults}"
         ),
         "google_flights": (
-            f"https://www.google.com/travel/flights?q={origin}+{dest}+{date}"
+            f"https://www.google.com/travel/flights?q={origin}+{dest}+{date}+{adults}+adults"
         ),
         "ryanair": (
             f"https://www.ryanair.com/it/it/booking/home?"

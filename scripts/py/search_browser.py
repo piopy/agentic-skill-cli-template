@@ -139,8 +139,8 @@ def gen_alt_airport_links(origin: str, dest_primary: str, date: str, adults: int
 
 FLIGHT_LINKS = {
     "skyscanner": "https://www.skyscanner.it/trasporti/voli/{origin}/{dest}/{date_c}/?adultsv2={adults}",
-    "google_flights": "https://www.google.com/travel/flights?q={origin}+{dest}+{date}",
-    "google_flights_roundtrip": "https://www.google.com/travel/flights?q={origin}+{dest}+{date}+{return_date}",
+    "google_flights": "https://www.google.com/travel/flights?q={origin}+{dest}+{date}+{adults}+adults",
+    "google_flights_roundtrip": "https://www.google.com/travel/flights?q={origin}+{dest}+{date}+{return_date}+{adults}+adults",
     "ryanair": "https://www.ryanair.com/it/it/booking/home?originIata={origin_u}&destinationIata={dest_u}&dateOut={date}&adults={adults}",
     "vueling": "https://www.vueling.com/it/voli-da-{origin}-a-{dest}",
 }
