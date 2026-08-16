@@ -262,13 +262,13 @@ def gen_flight_links(origin: str, dest: str, date: str, adults: int, return_date
 HOTEL_LINKS = {
     "booking": "https://www.booking.com/searchresults.it.html?ss={city_q}&checkin={checkin}&checkout={checkout}&group_adults={adults}&no_rooms=1&order=price&nflt=review_score%3D80%3Bfc%3D1%3Bpri%3D1",
     "airbnb": "https://www.airbnb.it/s/{city_q}/homes?checkin={checkin}&checkout={checkout}&adults={adults}",
-    "google_hotels": "https://www.google.com/travel/search?q=hotels+in+{city_q}&checkIn={checkin}&checkOut={checkout}&adults={adults}",
+    "google_hotels": "https://www.google.com/travel/search?q=hotels+in+{city_q}&checkin={checkin}&checkout={checkout}&adults={adults}",
 }
 
 
 def search_hotels_selenium(city: str, checkin: str, checkout: str, adults: int) -> dict:
     url = (f"https://www.google.com/travel/search?q=hotels+in+{urllib.parse.quote(city)}"
-           f"&checkIn={checkin}&checkOut={checkout}&adults={adults}&curr=EUR&hl=it")
+           f"&checkin={checkin}&checkout={checkout}&adults={adults}&curr=EUR&hl=it")
     body, source, no_results = search_google_with_retry(url)
 
     result = {
@@ -293,13 +293,13 @@ def search_hotels_selenium(city: str, checkin: str, checkout: str, adults: int) 
         if not line:
             continue
 
-        price_match = re.search(r'€(\d+)', line)
+        price_match = re.search(r'€\s*(\d+)|(\d+)\s*€', line)
         if not price_match:
             continue
 
-        price = f"€{price_match.group(1)}"
+        price = f"€{price_match.group(1) or price_match.group(2)}"
 
-        name = re.sub(r'\s*€\d+.*', '', line).strip()
+        name = re.sub(r'\s*€\s*\d+.*|\d+\s*€.*', '', line).strip()
         if not name or len(name) < 3:
             for j in range(i - 1, max(-1, i - 4), -1):
                 if j < 0:
@@ -310,6 +310,8 @@ def search_hotels_selenium(city: str, checkin: str, checkout: str, adults: int) 
                     break
 
         if not name or len(name) < 3:
+            continue
+        if name.lower().startswith(("meno di", "più di", "tutti i filtri")):
             continue
 
         if name not in seen_names:

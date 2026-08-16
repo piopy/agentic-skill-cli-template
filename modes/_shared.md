@@ -90,6 +90,24 @@ manuale" (sequenzato, con orari e collegamenti), non un semplice elenco:
 Sintesi pratica: **itinerario = sequenza camminabile con orari, chiusure,
 prezzi, collegamenti e cibo sulla rotta — non un elenco di attrazioni.**
 
+## Info città da Google Hotels (OBBLIGATORIE in ogni guida)
+
+Quando la destinazione ha hotel su Google Hotels, apri con Selenium il
+pannello **"Dove alloggiare"** (posto nella pagina di ricerca hotel:
+`https://www.google.com/travel/search?q=hotels+in+<città>&hl=it&ts=<ts>&qs=CAE4DQ&ap=MAE`)
+e clicca ogni area del pannello per raccogliere, per OGNI quartiere:
+
+1. **Punteggio della posizione** (x/5) e giudizio (Eccellente/Ottimo/Buono per i visitatori);
+2. **Prezzo medio per notte** della zona;
+3. **"Noto per"** (landmark/mostre principali);
+4. Descrizione breve del quartiere.
+
+Inserisci SEMPRE nella guida una sezione **"Quartieri — info da Google Hotels"**
+con questi dati in tabella, e aggiungi un commento sul quartiere dell'alloggio
+scelto (es. "Eixample: punteggio 4,6/5 Eccellente, prezzo medio 222 €/notte →
+il nostro hotel a 114 €/notte è sotto la media"). Se un'area scelta dall'utente
+non compare (es. L'Hospitalet, fuori dal centro), segnalalo esplicitamente.
+
 ## Tool disponibili
 
 Tutti gli script Python vanno eseguiti con `uv run --directory scripts/py/` dalla root del progetto.
@@ -98,9 +116,9 @@ Prima di usare `search_browser.py`, avvia Chrome: `uv run --directory scripts/py
 | Comando | Script | Cosa fa |
 |---------|--------|---------|
 | `node scripts/validate.mjs` | `scripts/validate.mjs` | Valida i dati di input |
-| `uv run --directory scripts/py search_browser.py flights ...` | `scripts/py/search_browser.py` | Cerca voli reali via Selenium + Chrome |
-| `uv run --directory scripts/py search_browser.py hotels ...` | `scripts/py/search_browser.py` | Cerca hotel via links (fallback) |
-| `uv run --directory scripts/py search_hotels.py --city ... --checkin ... --checkout ... --adults ...` | `scripts/py/search_hotels.py` | **DEFAULT per alloggi**: scraping Booking live con disponibilità+prezzi reali per date/adulti (`scrape_prices`). Nota: richiede Overpass, se fallisce usa `scrape_prices` direttamente |
+| `uv run --directory scripts/py search_browser.py flights ...` | `scripts/py/search_browser.py` | **DEFAULT per voli**: ricerca live su **Google Flights** via Selenium + Chrome. Se dà dati incompleti, usa il link **Google Flights** diretto (formato `https://www.google.com/travel/flights?q=blq+bcn+2027-05-21`). Non usare più Skyscanner come primo risultato |
+| `uv run --directory scripts/py search_browser.py hotels ...` | `scripts/py/search_browser.py` | **DEFAULT per hotel/alloggi**: ricerca live su **Google Hotels** (prezzi per notte, confronta Booking/KAYAK/altri OTA), incluse le **case vacanza** (filtro "Casa vacanze" di Google Hotels). Poi verifica su Booking |
+| `uv run --directory scripts/py search_hotels.py --city ... --checkin ... --checkout ... --adults ...` | `scripts/py/search_hotels.py` | **Verifica Booking**: scraping live con disponibilità REALE + prezzo totale per soggiorno + cancellazione gratuita per date/adulti (`scrape_prices`). Usalo DOPO Google Hotels per confermare disponibilità/prezzo e controllo cancellazione gratuita. Nota: richiede Overpass, se fallisce usa `scrape_prices` direttamente |
 | `uv run --directory scripts/py search_multi.py ...` | `scripts/py/search_multi.py` | Confronto rotte diretta/inversa + skiplagging |
 | `uv run --directory scripts/py search_everywhere.py --from BLQ [--month 2026-09] [--max N]` | `scripts/py/search_everywhere.py` | Scansione destinazioni economiche SENZA destinazione/data (Google Flights Explore, viaggi 1 settimana nei prossimi 6 mesi). Link Skyscanner every-nowhere generato come default |
 | `uv run --directory scripts/py search_poi.py ...` | `scripts/py/search_poi.py` | POI, attrazioni, cibo via Wikipedia API |
@@ -109,6 +127,15 @@ Prima di usare `search_browser.py`, avvia Chrome: `uv run --directory scripts/py
 | `uv run --directory scripts/py route_distance.py ...` | `scripts/py/route_distance.py` | Distanze e tempi tra POI via OSRM |
 | `uv run --directory scripts/py generate_links.py ...` | `scripts/py/generate_links.py` | Genera link di ricerca (fallback) |
 | `uv run --directory scripts/py chrome_driver.py start\|stop` | `scripts/py/chrome_driver.py` | Gestisce Chrome in Docker per Selenium |
+
+## Note
+
+**Flusso alloggi (nuovo default 2026)**: Google Hotels per scoprire hotel e prezzi (per notte) → poi Booking (`search_hotels.py scrape_prices`) per verificare disponibilità reale, prezzo totale per soggiorno e cancellazione gratuita. Google Hotels è più robusto contro i cambi layout di Booking.
+
+**REGOLA LINK DEFAULT (sempre)**: per ogni tratta/opzione proposta includi SEMPRE:
+1. il link **Google Flights** (formato `https://www.google.com/travel/flights?q=<da>+<a>+<YYYY-MM-DD>`, con date nel query) — così se la tariffa specifica risulta occupata, l'utente clicca e vede TUTTE le opzioni rimaste;
+2. il link **Google Hotels** (formato con parametri `ts`/`qs`/`ap` che fissano le date corrette, cfr. `search_browser.py` / blob ts) con tutte le opzioni per città/quartiere — così se l'hotel scelto è occupato, l'utente clicca e vede le alternative rimaste. Filtro "Casa vacanze" incluso.
+Non proporre più Skyscanner/Booking come link primari di riferimento.
 
 **Nota bus intercity**: non esiste uno script dedicato agli autobus a lunga
 percorrenza (es. Flixbus). Per proporre prezzi bus usa websearch (es.

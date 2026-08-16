@@ -212,41 +212,44 @@ def scrape_prices(city: str, checkin: str, checkout: str, adults: int) -> list[d
         time.sleep(10)
         hotels = []
         seen_urls = set()
-        for _ in range(2):
-            cards = driver.find_elements(By.CSS_SELECTOR, "div[data-testid='property-card']")
+        for _ in range(3):
+            cards = driver.find_elements(
+                By.CSS_SELECTOR, "div[data-testid='property-card-container']"
+            ) or driver.find_elements(By.CSS_SELECTOR, "div[data-testid='property-card']")
             if cards:
                 break
             time.sleep(8)
         for card in cards:
             if len(hotels) >= 25:
                 break
-            try:
-                name = card.find_element(By.CSS_SELECTOR, "div[data-testid='title']").text.strip()
-            except Exception:
-                continue
+            html = card.get_attribute("innerHTML") or ""
+            name = None
+            m = re.search(r"data-testid=\"title\"[^>]*>(.*?)</div", html, re.S)
+            if m:
+                name = re.sub(r"<[^>]+>", "", m.group(1)).strip()
             if not name:
                 continue
             price = None
-            for sel in ("span[data-testid='price-and-discounted-price']",
-                        "div[data-testid='price-for-x-nights']"):
-                try:
-                    price = card.find_element(By.CSS_SELECTOR, sel).text.strip()
-                    if price:
-                        break
-                except Exception:
-                    continue
+            for pat in (
+                r"data-testid=\"price-and-discounted-price\"[^>]*>\s*€\s*(?:&nbsp;)?\s*([\d.,]+)",
+                r"Prezzo attuale:\s*€\s*(?:&nbsp;)?\s*([\d.,]+)",
+                r"Prezzo:\s*€\s*(?:&nbsp;)?\s*([\d.,]+)",
+            ):
+                m = re.search(pat, html)
+                if m:
+                    price = m.group(1).replace(".", "").replace(",", ".").rstrip(".") + " €"
+                    break
             if not price:
                 continue
-            card_text = card.text.lower()
-            if any(m in card_text for m in SOLD_OUT_MARKERS):
+            card_text = html.lower()
+            if any(mk in card_text for mk in SOLD_OUT_MARKERS):
                 continue
             link = None
-            try:
-                link = card.find_element(
-                    By.CSS_SELECTOR, "a[data-testid='property-card-desktop-single-image']"
-                ).get_attribute("href")
-            except Exception:
-                pass
+            m = re.search(r"\"availability-cta-btn\"[^>]*href=\"([^\"]+)\"", html)
+            if not m:
+                m = re.search(r"href=\"([^\"]+)\"", html)
+            if m:
+                link = m.group(1)
             if not link or "matching_block_id=" not in link:
                 continue
             if link in seen_urls:

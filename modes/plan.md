@@ -163,15 +163,21 @@ Salva orari, costi, link.
 
 ### Step 3 — Alloggio (via script deterministici)
 
-**REGOLA — Valuta TUTTI i risultati e DEFAUL US scraping vivo per disponibilità**:
-   Per ogni città usare SEMPRE `search_hotels.py` (scraping Booking live) con
-   date e adulti esatti, così prezzi e strutture sono que effettivamente
-   prenotabili per il vostro gruppo/date. `search_browser.py hotels` su Selenium
-   può non estrarre i prezzi (es. Budapest li nasconde dietro `&nbsp;`); in tal
-   caso usa `scrape_prices` di `search_hotels.py` direttamente. Non usare
+**REGOLA — Valuta TUTTI i risultati con flusso Google Hotels → Booking (default 2026)**:
+   Per ogni città usare SEMPRE `search_browser.py hotels` (Google Hotels, prezzi
+   per notte, confronto OTA) con date e adulti esatti, poi **verificare su
+   Booking** con `search_hotels.py`/`scrape_prices` per disponibilità REALE,
+   prezzo totale per soggiorno e **cancellazione gratuita**. Google Hotels è più
+   robusto contro i cambi layout di Booking (che cambia markup spesso). Non usare
    soltanto websearch/siti terzi: possono elencare strutture NON prenotabili.
 
-1. Per ogni città/tappa: cerca hotel reali e verificabili:
+1. Per ogni città/tappa: scoperta hotel su Google Hotels:
+   ```
+   uv run --directory scripts/py search_browser.py hotels --city "<CITTA>" --checkin YYYY-MM-DD --checkout YYYY-MM-DD --adults <N>
+   ```
+   (prezzi per notte; confronta anche su Booking/KAYAK mostrati da Google).
+
+2. Verifica su Booking disponibilità+prezzo totale+cancellazione gratuita:
    ```
    uv run --directory scripts/py search_hotels.py --city "<CITTA>" --checkin YYYY-MM-DD --checkout YYYY-MM-DD --adults <N> --max <N>
    ```
@@ -179,7 +185,8 @@ Salva orari, costi, link.
 
 2. Estrai dall'output JSON completo TUTTI gli hotel con prezzo, nome e rating.
    Se un hotel appare sia nella sezione "sponsored" che in "view prices",
-   mostra il prezzo più basso.
+   mostra il prezzo più basso. Segnala sempre la **cancellazione gratuita**
+   solo se verificata su Booking (Google Hotels può NON mostrar il dettaglio).
 
 3. Per le distanze tra quartieri e punti d'interesse:
    ```
