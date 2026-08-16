@@ -102,6 +102,7 @@ Prima di usare `search_browser.py`, avvia Chrome: `uv run --directory scripts/py
 | `uv run --directory scripts/py search_browser.py hotels ...` | `scripts/py/search_browser.py` | Cerca hotel via links (fallback) |
 | `uv run --directory scripts/py search_hotels.py --city ... --checkin ... --checkout ... --adults ...` | `scripts/py/search_hotels.py` | **DEFAULT per alloggi**: scraping Booking live con disponibilità+prezzi reali per date/adulti (`scrape_prices`). Nota: richiede Overpass, se fallisce usa `scrape_prices` direttamente |
 | `uv run --directory scripts/py search_multi.py ...` | `scripts/py/search_multi.py` | Confronto rotte diretta/inversa + skiplagging |
+| `uv run --directory scripts/py search_everywhere.py --from BLQ [--month 2026-09] [--max N]` | `scripts/py/search_everywhere.py` | Scansione destinazioni economiche SENZA destinazione/data (Google Flights Explore, viaggi 1 settimana nei prossimi 6 mesi). Link Skyscanner every-nowhere generato come default |
 | `uv run --directory scripts/py search_poi.py ...` | `scripts/py/search_poi.py` | POI, attrazioni, cibo via Wikipedia API |
 | `uv run --directory scripts/py search_weather.py ...` | `scripts/py/search_weather.py` | Previsioni meteo via Open-Meteo |
 | `uv run --directory scripts/py geocode.py ...` | `scripts/py/geocode.py` | Geocoding via OpenStreetMap |
