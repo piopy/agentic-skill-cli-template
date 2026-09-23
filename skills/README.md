@@ -25,6 +25,5 @@ una riga nel router.
 3. Indica quali file caricare per quel modo.
 
 ## Nota multi-CLI
-Possibile replicare le skill anche in `.agents/skills/`, `.opencode/`, `.qwen/`
-per supportare più CLI. Per iniziare basta una sola cartella skill; aggiungi le
-altre solo se vuoi distribuire su più CLI.
+`.claude/skills/myframe` (Claude Code) e `.agents/skills/myframe` (Codex, OpenCode)
+sono symlink a questa cartella: c'è una sola copia da modificare.

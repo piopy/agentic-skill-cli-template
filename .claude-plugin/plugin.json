@@ -5,11 +5,5 @@
   "author": {
     "name": "Il tuo nome",
     "url": "https://example.com"
-  },
-  "skills": true,
-  "permissions": {
-    "allow": [
-      "Bash(node:*)"
-    ]
   }
 }

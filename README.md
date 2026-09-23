@@ -111,7 +111,28 @@ Ogni cartella ha il suo `README.md` con spiegazioni dettagliate. Panoramica:
 
 ---
 
-## 8. Prossimi passi
+## 8. Installazione
+
+Fork del repo, poi `/myframe init`: il Passo 0 rinomina `myframe` con il nome del tuo framework.
+
+| CLI | Come si usa | Comando |
+|-----|-------------|---------|
+| Claude Code (repo aperto) | automatico, via `.claude/skills/myframe` | `/myframe` |
+| Claude Code (globale, tutti i progetti) | symlink `~/.claude/skills/myframe` → `<repo>/skills/myframe` (proposto alla fine di `init`) | `/myframe` |
+| Claude Code (plugin, da un altro progetto) | `/plugin marketplace add <repo-o-percorso>` poi `/plugin install myframe@myframe` | `/myframe:myframe` |
+| Codex, OpenCode | automatico, via `.agents/skills/myframe` + `AGENTS.md` | skill `myframe` |
+
+`.claude/skills/myframe` e `.agents/skills/myframe` sono symlink a `skills/myframe`:
+modifica solo quest'ultima. Su Windows serve `git config core.symlinks true`.
+
+Da plugin, i dati utente (`config/`, `data/`, `reports/`, `output/`, `modes/_profile.md`)
+vengono scritti nella cartella di lavoro, non nella cache del plugin (vedi "Percorsi" in `SKILL.md`).
+
+Verifica il manifest: `claude plugin validate .`
+
+---
+
+## 9. Prossimi passi
 
 1. Leggi i README di ogni cartella (sono pensati come una lezione).
 2. Rinomina `myframe` con il nome del tuo framework.

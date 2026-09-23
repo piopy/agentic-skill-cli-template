@@ -22,6 +22,25 @@ Alla fine della sessione, l'utente deve avere:
 
 ## Flusso dell'intervista
 
+### Passo 0 — Rinominare il framework
+Questo repo è un template da forkare: il nome `myframe` è un segnaposto.
+Se esiste `skills/myframe/`, fai questo passo prima di tutto il resto
+(altrimenti saltalo).
+1. Chiedi il nome del framework. Deve essere kebab-case (`[a-z0-9-]+`),
+   perché diventa il comando `/<nome>`. Proponi un default dal nome della cartella del repo.
+2. Mostra l'elenco dei file che contengono `myframe`
+   (`grep -rl myframe --exclude-dir=.git --exclude=init.md .`) e fatti confermare.
+3. Sostituisci `myframe` con `<nome>` in tutti quei file. Non toccare questo
+   file (`modes/init.md`): il Passo 0 deve restare riconoscibile.
+4. Rinomina `skills/myframe/` in `skills/<nome>/` e ricrea i symlink:
+   `.claude/skills/<nome>` e `.agents/skills/<nome>` → `../../skills/<nome>`
+   (rimuovi quelli vecchi `myframe`).
+5. Verifica: `grep -rl myframe --exclude-dir=.git --exclude=init.md .` non trova più nulla.
+6. Di' all'utente che da ora il comando è `/<nome>` (potrebbe servire
+   riavviare il CLI perché lo veda) e prosegui con il Passo 1.
+
+Non committare: è l'utente a decidere quando.
+
 ### Passo 1 — Capire il dominio
 Chiedi all'utente, in linguaggio naturale:
 1. "Cosa vuoi che questo framework faccia per te?" (lo scopo)
@@ -56,17 +75,33 @@ generazione file), proponi anche un piccolo script in `scripts/` e spiega
 all'utente perché quel pezzo va in codice e non in prosa.
 
 ### Passo 6 — Collegare il router
-Aggiorna `skills/myframe/SKILL.md`: aggiungi il nuovo comando alla tabella di
+Aggiorna `skills/<nome>/SKILL.md`: aggiungi il nuovo comando alla tabella di
 routing e al menu di discovery, e indica quali file caricare per quel modo.
 
 ### Passo 7 — Prova a secco
-Simula l'invocazione `/myframe <verbo> <input d'esempio>` e mostra all'utente
+Simula l'invocazione `/<nome> <verbo> <input d'esempio>` e mostra all'utente
 cosa accadrebbe passo per passo. Raccogli feedback e itera sul modo pilota
 finché non è soddisfatto.
 
 ### Passo 8 — Prossimi passi
 Riepiloga cosa è stato creato e quali verbi restano da implementare. Suggerisci
-di tornare con `/myframe init` per aggiungere il prossimo modo.
+di tornare con `/<nome> init` per aggiungere il prossimo modo.
+
+### Passo 9 — Installazione globale (opzionale)
+Finora la skill è disponibile solo in questo progetto (`.claude/skills/<nome>`).
+Se `~/.claude/skills/<nome>` non esiste, chiedi all'utente se vuole renderla
+disponibile anche negli altri progetti. Se sì:
+1. `mkdir -p ~/.claude/skills`
+2. `ln -s "<percorso assoluto del repo>/skills/<nome>" ~/.claude/skills/<nome>`
+3. Spiega che:
+   - è un symlink, non una copia: le modifiche al repo valgono ovunque, e il
+     repo non va spostato né cancellato (altrimenti il link si rompe);
+   - negli altri progetti i dati utente (`config/`, `data/`, `reports/`,
+     `output/`, `modes/_profile.md`) vengono scritti nella cartella di quel
+     progetto (vedi "Percorsi" in `SKILL.md`);
+   - per disinstallare: `rm ~/.claude/skills/<nome>`.
+
+Se `~/.claude/skills/<nome>` esiste già, non sovrascriverlo: dillo all'utente.
 
 ## Nota per l'agente
 Sei tu a scrivere i file (l'utente te lo consente). Usa il tool di domande

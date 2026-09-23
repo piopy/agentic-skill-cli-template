@@ -2,7 +2,7 @@
 name: myframe
 description: <una frase sul tuo framework> — router che smista i comandi verso i modi
 arguments: mode
-user_invocable: true
+user-invocable: true
 argument-hint: "[init | analyze | report | <i tuoi modi> ]"
 license: MIT
 ---
@@ -11,6 +11,20 @@ license: MIT
 
 Questo file è il **punto d'ingresso** del framework. L'utente scrive
 `/myframe <comando>` e qui decidi quale modo eseguire e quali file caricare.
+
+## Percorsi (leggi prima di tutto)
+
+Tutti i percorsi del framework sono relativi a due radici:
+
+- **SYSTEM** — dove stanno `AGENTS.md`, `modes/`, `scripts/`, `templates/`.
+  Se la cartella di lavoro contiene `AGENTS.md` e `modes/_shared.md`, è quella
+  (repo forkato e aperto direttamente). Altrimenti (installato come plugin) è
+  due livelli sopra il percorso *reale* di questo `SKILL.md` (risolvi i symlink).
+- **USER** — sempre la cartella di lavoro. Qui stanno `config/profile.yml`,
+  `modes/_profile.md`, `data/`, `reports/`, `output/`. Mai scrivere dati utente
+  in SYSTEM se è diversa da USER: gli aggiornamenti del plugin la sovrascrivono.
+
+---
 
 ## Routing dei modi
 

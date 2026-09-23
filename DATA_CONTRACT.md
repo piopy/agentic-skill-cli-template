@@ -34,6 +34,7 @@ Contiene logica, script, template e istruzioni che migliorano a ogni release.
 | `templates/*` | Modelli per gli output |
 | `config/profile.example.yml` | Esempio di configurazione (NON il file reale dell'utente) |
 | `.claude-plugin/*` | Manifest di distribuzione |
+| `.claude/skills/*`, `.agents/skills/*` | Symlink al router per i vari CLI |
 
 ## La regola operativa
 
